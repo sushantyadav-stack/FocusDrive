@@ -3,79 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Focus Arena – Classic</title>
-
+<title>Focus Arena – Engaging</title>
 <style>
 *{font-family:monospace;box-sizing:border-box;transition:.25s}
-
-body{
-margin:0;
-background:#1a1a1a;
-color:#eaeaea;
-text-align:center;
-}
-
+body{margin:0;background:#1a1a1a;color:#eaeaea;text-align:center;overflow:hidden}
 body.night{background:#0b0b0b;color:#b6c6c6}
-
-header{
-background:#111;
-padding:14px;
-font-size:1.5em;
-border-bottom:2px solid #333;
-}
-
-nav button{
-margin:5px;
-padding:8px 14px;
-background:#222;
-border:1px solid #444;
-color:#eee;
-border-radius:6px;
-}
-
+header{background:#111;padding:14px;font-size:1.5em;border-bottom:2px solid #333}
+nav button{margin:5px;padding:8px 14px;background:#222;border:1px solid #444;color:#eee;border-radius:6px}
 section{display:none;padding:12px}
 section.active{display:block}
-
 .orb{
-width:100px;height:100px;
-margin:16px auto;
-border-radius:50%;
-background:#2e2e2e;
-border:3px solid #555;
+  width:100px;height:100px;margin:16px auto;
+  border-radius:50%;
+  border:3px solid #555;
+  background: radial-gradient(circle,#2e2e2e,#111);
+  box-shadow: 0 0 20px #0ff;
+  transition: all 0.3s;
 }
-
-.bar{
-width:80%;height:14px;
-margin:10px auto;
-background:#333;border-radius:6px;
-overflow:hidden;
-}
+.bar{width:80%;height:14px;margin:10px auto;background:#333;border-radius:6px;overflow:hidden}
 .fill{height:100%;width:0%;background:#9fd3c7}
-
-.popup{
-display:none;
-position:fixed;
-bottom:15px;left:10%;right:10%;
-background:#eee;color:#000;
-padding:10px;border-radius:8px;
-font-weight:bold;
-z-index:999;
-}
-
-.box{
-background:#222;border:1px solid #444;
-margin:6px auto;padding:8px;
-border-radius:6px;width:85%;
-}
-
+.popup{display:none;position:fixed;bottom:15px;left:10%;right:10%;background:#eee;color:#000;padding:10px;border-radius:8px;font-weight:bold;z-index:999}
+.box{background:#222;border:1px solid #444;margin:6px auto;padding:8px;border-radius:6px;width:85%}
 .owned{background:#2f4f4f}
 button.buy{float:right}
 </style>
 </head>
-
 <body>
 
-<header>FOCUS ARENA – CLASSIC</header>
+<header>FOCUS ARENA – ENGAGING</header>
 
 <nav>
 <button onclick="show('play')">Play</button>
@@ -89,25 +44,21 @@ button.buy{float:right}
 
 <!-- PLAY / STOPWATCH -->
 <section id="play" class="active">
-<div class="orb"></div>
+<div class="orb" id="orb"></div>
 <h2 id="time">00:00</h2>
-
 <button onclick="start()">START</button>
 <button onclick="pause()">PAUSE</button>
 <button onclick="resetStopwatch()">RESET</button>
-
 <p>Level: <span id="lvl">1</span></p>
 <p>Session Streak: 🔥 <span id="streak">0</span></p>
 <p>Daily Streak: 📅 <span id="dstreak">0</span></p>
-
 <div class="bar"><div id="energy" class="fill"></div></div>
 <p>XP: <span id="xp">0</span> | Coins: <span id="points">0</span></p>
 </section>
 
 <!-- TIMER -->
 <section id="timer">
-<input id="tmin" type="number" placeholder="Minutes">
-<br><br>
+<input id="tmin" type="number" placeholder="Minutes"><br><br>
 <button onclick="startTimer()">Start Timer</button>
 <button onclick="resetTimer()">Reset Timer</button>
 <h2 id="ttime">00:00</h2>
@@ -117,22 +68,9 @@ button.buy{float:right}
 <!-- MARKET -->
 <section id="market">
 <h3>🛒 Marketplace</h3>
-
-<div class="box">
-⚡ XP Boost (5 min) – 20 coins
-<button class="buy" onclick="buy('xp')">Buy</button>
-</div>
-
-<div class="box">
-🔥 Streak Shield – 15 coins
-<button class="buy" onclick="buy('shield')">Buy</button>
-</div>
-
-<div class="box">
-🌙 Night Pass – 10 coins
-<button class="buy" onclick="buy('night')">Buy</button>
-</div>
-
+<div class="box">⚡ XP Boost (5 min) – 20 coins <button class="buy" onclick="buy('xp')">Buy</button></div>
+<div class="box">🔥 Streak Shield – 15 coins <button class="buy" onclick="buy('shield')">Buy</button></div>
+<div class="box">🌙 Night Pass – 10 coins <button class="buy" onclick="buy('night')">Buy</button></div>
 <h3>🎒 Owned</h3>
 <div id="owned"></div>
 </section>
@@ -147,30 +85,28 @@ button.buy{float:right}
 <audio id="bgm" loop src="https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3"></audio>
 
 <script>
-/* ---------- STATE ---------- */
+/* ---------------- STATE ---------------- */
 let min=0,sec=0,timer=null;
 let xp=0,level=1,points=0;
-let streak=0,highStreak=0;
-let dailyStreak=0,lastDay="";
+let streak=0,highStreak=0,dailyStreak=0,lastDay="";
 let owned=[],boosts={xp:false,shield:false,night:false};
+let streakProgress=0;
+const restrictedSites=["youtube.com","instagram.com"];
 
-/* ---------- ELEMENTS ---------- */
+/* ---------------- ELEMENTS ---------------- */
 const popupBox=document.getElementById("popup");
 const energy=document.getElementById("energy");
+const orb=document.getElementById("orb");
 const bgm=document.getElementById("bgm");
 
-/* ---------- UI ---------- */
+/* ---------------- UI ---------------- */
 function show(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
-function popup(m){
-popupBox.innerText=m;
-popupBox.style.display="block";
-setTimeout(()=>popupBox.style.display="none",1500);
-}
+function popup(m){popupBox.innerText=m;popupBox.style.display="block";setTimeout(()=>popupBox.style.display="none",1500);}
 
-/* ---------- STOPWATCH ---------- */
+/* ---------------- STOPWATCH ---------------- */
 function start(){
 if(timer)return;
 bgm.volume=.15;bgm.play();
@@ -178,43 +114,55 @@ timer=setInterval(()=>{
 sec++;
 if(sec==60){sec=0;min++;gain();}
 updateTime();
+updateStreakBar();
+updateOrb();
 },1000);
 }
 
 function pause(){
-clearInterval(timer);
-timer=null;
+clearInterval(timer);timer=null;
 if(boosts.shield){boosts.shield=false;popup("Shield Used")}
 else checkBlurAlert();
 }
 
 function resetStopwatch(){
-pause();
-min=0;sec=0;streak=0;
+pause();min=0;sec=0;streak=0;streakProgress=0;
 energy.style.width="0%";
-updateTime();
-updateUI();
+updateTime();updateUI();
 popup("Stopwatch Reset");
+orb.style.background="radial-gradient(circle,#2e2e2e,#111)";
+orb.style.width="100px";orb.style.height="100px";
 }
 
-/* ---------- TIME DISPLAY ---------- */
-function updateTime(){
-time.innerText=`${String(min).padStart(2,0)}:${String(sec).padStart(2,0)}`;
+/* ---------------- TIME DISPLAY ---------------- */
+function updateTime(){time.innerText=`${String(min).padStart(2,0)}:${String(sec).padStart(2,0)}`}
+
+/* ---------------- STREAK BAR ---------------- */
+function updateStreakBar(){
+streakProgress += 100/60;
+if(streakProgress>100) streakProgress=100;
+energy.style.width = streakProgress+"%";
 }
 
-/* ---------- GAIN ---------- */
+/* ---------------- ORB PULSE ---------------- */
+function updateOrb(){
+let size = 100 + Math.sin(Date.now()/300)*15;
+orb.style.width = size+"px";
+orb.style.height = size+"px";
+orb.style.background = `radial-gradient(circle,hsl(${Date.now()/50 %360},70%,40%),hsl(${Date.now()/50 %360},30%,10%))`;
+}
+
+/* ---------------- GAIN ---------------- */
 function gain(){
 let gainXP=boosts.xp?2:1;
 xp+=gainXP;
 points+=boosts.night&&nightMode()?2:1;
 streak++;
 highStreak=Math.max(highStreak,streak);
-energy.style.width=(xp/(level*20))*100+"%";
-if(xp>=level*20){xp=0;level++;popup("Level Up")}
 updateUI();save();
 }
 
-/* ---------- TIMER ---------- */
+/* ---------------- TIMER ---------------- */
 let tm=0,ts=0,tInt=null;
 function startTimer(){
 tm=parseInt(tmin.value)||0;ts=0;
@@ -223,30 +171,26 @@ tInt=setInterval(()=>{
 if(tm==0&&ts==0){clearInterval(tInt);popup("Time Up");return;}
 if(ts==0){tm--;ts=59}else ts--;
 ttime.innerText=`${String(tm).padStart(2,0)}:${String(ts).padStart(2,0)}`;
+updateOrb();updateBackground();
 },1000);
 }
-function resetTimer(){
-clearInterval(tInt);
-tm=0;ts=0;
-ttime.innerText="00:00";
-popup("Timer Reset");
+function resetTimer(){clearInterval(tInt);tm=0;ts=0;ttime.innerText="00:00";popup("Timer Reset");}
+
+/* ---------------- BACKGROUND ---------------- */
+function updateBackground(){
+document.body.style.background = `hsl(${Date.now()/100 %360},30%,10%)`;
 }
 
-/* ---------- MARKET ---------- */
+/* ---------------- MARKET ---------------- */
 function buy(item){
 const prices={xp:20,shield:15,night:10};
 if(points<prices[item])return popup("Not enough coins");
-points-=prices[item];
-owned.push(item);
-boosts[item]=true;
-popup("Purchased");
-renderOwned();save();
+points-=prices[item];owned.push(item);boosts[item]=true;
+popup("Purchased");renderOwned();save();
 }
-function renderOwned(){
-ownedDiv.innerHTML=owned.map(o=>`<div class="box owned">${o}</div>`).join("");
-}
+function renderOwned(){ownedDiv.innerHTML=owned.map(o=>`<div class="box owned">${o}</div>`).join("");}
 
-/* ---------- DAILY STREAK ---------- */
+/* ---------------- DAILY STREAK ---------------- */
 function checkDaily(){
 let today=new Date().toDateString();
 if(lastDay!==today){
@@ -257,41 +201,28 @@ popup("Daily Streak +5 coins");
 }
 }
 
-/* ---------- NIGHT MODE ---------- */
+/* ---------------- NIGHT MODE ---------------- */
 function nightMode(){return new Date().getHours()>=22;}
 if(nightMode())document.body.classList.add("night");
 
-/* ---------- ALERT SYSTEM ---------- */
-const restrictedSites=["youtube.com","instagram.com"];
+/* ---------------- ALERT SYSTEM ---------------- */
 function checkBlurAlert(){
-if(document.hidden){
-popup("⚠ You left Focus Arena! Stay on track!");
-}
+if(document.hidden){popup("⚠ You left Focus Arena! Stay on track!");streak=0;updateUI();}
 }
 document.addEventListener("visibilitychange",()=>checkBlurAlert());
 window.addEventListener("blur",()=>checkBlurAlert());
 
-/* ---------- RESET ALL ---------- */
-function resetAll(){
-if(!confirm("Reset everything?"))return;
-localStorage.clear();
-location.reload();
-}
+/* ---------------- RESET ALL ---------------- */
+function resetAll(){if(!confirm("Reset everything?"))return;localStorage.clear();location.reload();}
 
-/* ---------- SAVE / LOAD ---------- */
+/* ---------------- SAVE / LOAD ---------------- */
 function updateUI(){
-xpSpan.innerText=xp;
-pointsSpan.innerText=points;
-streakSpan.innerText=streak;
-lvlSpan.innerText=level;
-dstreakSpan.innerText=dailyStreak;
-sc.innerText=points;
-hs.innerText=highStreak;
+xpSpan.innerText=xp; pointsSpan.innerText=points; streakSpan.innerText=streak;
+lvlSpan.innerText=level; dstreakSpan.innerText=dailyStreak;
+sc.innerText=points; hs.innerText=highStreak;
 }
 function save(){
-localStorage.setItem("focusarena",JSON.stringify({
-xp,level,points,streak,highStreak,dailyStreak,lastDay,owned,boosts
-}));
+localStorage.setItem("focusarena",JSON.stringify({xp,level,points,streak,highStreak,dailyStreak,lastDay,owned,boosts}));
 }
 function load(){
 let d=JSON.parse(localStorage.getItem("focusarena"));
@@ -300,12 +231,15 @@ Object.assign({xp,level,points,streak,highStreak,dailyStreak,lastDay,owned,boost
 updateUI();renderOwned();
 }
 
-/* ---------- INIT ---------- */
-const xpSpan=xp,pointsSpan=points,streakSpan=streak,lvlSpan=lvl;
-const dstreakSpan=document.getElementById("dstreak");
-const ownedDiv=document.getElementById("owned");
-const sc=document.getElementById("sc");
-const hs=document.getElementById("hs");
+/* ---------------- INIT ---------------- */
+const xpSpan = document.getElementById("xp");
+const pointsSpan = document.getElementById("points");
+const streakSpan = document.getElementById("streak");
+const lvlSpan = document.getElementById("lvl");
+const dstreakSpan = document.getElementById("dstreak");
+const ownedDiv = document.getElementById("owned");
+const sc = document.getElementById("sc");
+const hs = document.getElementById("hs");
 
 load();checkDaily();renderOwned();
 </script>
