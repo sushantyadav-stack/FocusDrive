@@ -1,188 +1,329 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FocusDrive</title>
+<title>Focus Arena – Classic</title>
 
 <style>
-/* ===== GLOBAL ===== */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: black;
-  color: white;
-  overflow-x: hidden;
+*{
+font-family: monospace;
+transition:.25s;
+box-sizing:border-box;
 }
 
-/* ===== CYBER BACKGROUND ===== */
-.cyber-bg {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
-  animation: bgMove 10s infinite alternate;
-  z-index: -1;
+body{
+margin:0;
+background:#1a1a1a;
+color:#eaeaea;
+text-align:center;
 }
 
-@keyframes bgMove {
-  0% {filter: hue-rotate(0deg);}
-  100% {filter: hue-rotate(120deg);}
+body.night{
+background:#0b0b0b;
+color:#b6c6c6;
 }
 
-/* ===== CONTAINER ===== */
-.container {
-  max-width: 420px;
-  margin: auto;
-  padding: 20px;
-  text-align: center;
+header{
+background:#111;
+padding:14px;
+font-size:1.5em;
+letter-spacing:2px;
+border-bottom:2px solid #333;
 }
 
-/* ===== TITLE ===== */
-h1 {
-  font-size: 2.2rem;
-  margin-bottom: 5px;
+nav button{
+margin:5px;
+padding:8px 14px;
+background:#222;
+border:1px solid #444;
+color:#eee;
+border-radius:6px;
 }
 
-.subtitle {
-  opacity: 0.8;
-  margin-bottom: 25px;
+nav button:hover{
+background:#333;
 }
 
-/* ===== STOPWATCH ===== */
-#display {
-  font-size: 3rem;
-  margin: 20px 0;
-  color: #00ffcc;
-  transition: color 0.3s;
+section{
+display:none;
+padding:12px;
+}
+section.active{display:block}
+
+.orb{
+width:100px;
+height:100px;
+margin:16px auto;
+border-radius:50%;
+background:#2e2e2e;
+border:3px solid #555;
 }
 
-/* ===== BUTTONS ===== */
-button {
-  width: 100%;
-  padding: 14px;
-  margin: 8px 0;
-  font-size: 1rem;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #00ffcc, #0077ff);
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
+.bar{
+width:80%;
+height:14px;
+margin:10px auto;
+background:#333;
+border-radius:6px;
+overflow:hidden;
+}
+.fill{
+height:100%;
+width:0%;
+background:#9fd3c7;
 }
 
-button:active {
-  transform: scale(0.97);
+.popup{
+display:none;
+position:fixed;
+bottom:15px;
+left:10%;
+right:10%;
+background:#eee;
+color:#000;
+padding:10px;
+border-radius:8px;
+font-weight:bold;
 }
 
-/* ===== COLOR PICKER ===== */
-input[type="color"] {
-  width: 100%;
-  height: 50px;
-  border-radius: 12px;
-  border: none;
-  margin-top: 10px;
+.task, .achievement{
+background:#222;
+border:1px solid #444;
+margin:6px auto;
+padding:8px;
+border-radius:6px;
+width:85%;
+font-size:.9em;
 }
 
-/* ===== MODE SWITCH ===== */
-.mode {
-  margin-top: 20px;
-  opacity: 0.85;
+.achievement.unlocked{
+background:#2f4f4f;
+color:#dff;
 }
 
-/* ===== FOOTER ===== */
-.footer {
-  margin-top: 30px;
-  font-size: 0.8rem;
-  opacity: 0.6;
+.tag{
+display:inline-block;
+padding:5px 10px;
+margin:4px;
+background:#ccc;
+color:#000;
+border-radius:6px;
+font-size:.8em;
 }
 </style>
 </head>
 
 <body>
-<div class="cyber-bg"></div>
 
-<div class="container">
-  <h1>FocusDrive</h1>
-  <div class="subtitle">Boost your focus. Control your time.</div>
+<header>FOCUS ARENA – CLASSIC</header>
 
-  <!-- Stopwatch -->
-  <div id="display">00:00:00</div>
+<nav>
+<button onclick="show('play')">Play</button>
+<button onclick="show('timer')">Timer</button>
+<button onclick="show('tasks')">Quests</button>
+<button onclick="show('market')">Stats</button>
+<button onclick="resetAll()">Reset</button>
+</nav>
 
-  <button onclick="start()">Start</button>
-  <button onclick="pause()">Pause</button>
-  <button onclick="reset()">Reset</button>
+<div id="popup" class="popup"></div>
 
-  <!-- Color Change -->
-  <div class="mode">Change Stopwatch Color</div>
-  <input type="color" onchange="changeColor(this.value)">
+<section id="play" class="active">
+<div class="orb"></div>
+<h2 id="time">00:00</h2>
 
-  <!-- Pomodoro -->
-  <button onclick="pomodoro()">🍅 Pomodoro 25 min</button>
+<button onclick="start()">START</button>
+<button onclick="pause()">PAUSE</button>
 
-  <!-- Dark / Neon -->
-  <button onclick="toggleMode()">🌗 Toggle Neon Mode</button>
+<p>Level: <span id="lvl">1</span></p>
+<p>Combo: <span id="streak">0</span></p>
 
-  <div class="footer">Offline • Mobile Friendly • FocusDrive</div>
-</div>
+<div class="bar"><div id="energy" class="fill"></div></div>
+<p>XP: <span id="xp">0</span> | Coins: <span id="points">0</span></p>
+</section>
+
+<section id="timer">
+<input id="tmin" type="number" placeholder="Minutes">
+<br><br>
+<button onclick="startTimer()">Start Timer</button>
+<h2 id="ttime">00:00</h2>
+<p id="nightInfo"></p>
+</section>
+
+<section id="tasks">
+<input id="taskInput" placeholder="New Quest">
+<button onclick="addTask()">Add</button>
+<div id="taskList"></div>
+</section>
+
+<section id="market">
+<h3>🏆 Achievements</h3>
+<div id="achievements"></div>
+
+<h3>🎒 Owned Tags</h3>
+<div id="owned"></div>
+</section>
+
+<audio id="bgm" loop src="https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3"></audio>
 
 <script>
-let timer = null;
-let seconds = 0;
-let neon = true;
+/* ---------- STATE ---------- */
+let min=0,sec=0,timer=null;
+let xp=0,level=1,points=0,streak=0;
+let owned=[];
+let achievements={first:false,combo:false,level:false,coins:false,night:false};
 
-/* ===== FORMAT TIME ===== */
-function formatTime(sec) {
-  let h = String(Math.floor(sec / 3600)).padStart(2,'0');
-  let m = String(Math.floor((sec % 3600) / 60)).padStart(2,'0');
-  let s = String(sec % 60).padStart(2,'0');
-  return `${h}:${m}:${s}`;
+/* ---------- ELEMENTS ---------- */
+const popupBox=document.getElementById("popup");
+const energy=document.getElementById("energy");
+const bgm=document.getElementById("bgm");
+
+/* ---------- UI ---------- */
+function show(id){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
 
-/* ===== STOPWATCH ===== */
-function start() {
-  if (timer) return;
-  timer = setInterval(() => {
-    seconds++;
-    display.innerText = formatTime(seconds);
-  }, 1000);
+function popup(msg){
+popupBox.innerText=msg;
+popupBox.style.display="block";
+setTimeout(()=>popupBox.style.display="none",1500);
 }
 
-function pause() {
-  clearInterval(timer);
-  timer = null;
+/* ---------- FOCUS MODE ---------- */
+function start(){
+if(timer)return;
+bgm.volume=.15;
+bgm.play();
+timer=setInterval(()=>{
+sec++;
+if(sec==60){sec=0;min++;gain();}
+updateTime();
+},1000);
 }
 
-function reset() {
-  pause();
-  seconds = 0;
-  display.innerText = "00:00:00";
+function pause(){
+clearInterval(timer);
+timer=null;
 }
 
-/* ===== COLOR ===== */
-function changeColor(color) {
-  display.style.color = color;
+function updateTime(){
+time.innerText=`${String(min).padStart(2,0)}:${String(sec).padStart(2,0)}`;
 }
 
-/* ===== POMODORO ===== */
-function pomodoro() {
-  reset();
-  seconds = 25 * 60;
-  display.innerText = formatTime(seconds);
-  timer = setInterval(() => {
-    seconds--;
-    display.innerText = formatTime(seconds);
-    if (seconds <= 0) {
-      pause();
-      alert("Pomodoro complete! Take a break 🚀");
-    }
-  }, 1000);
+function gain(){
+xp++;points++;streak++;
+energy.style.width=(xp/(level*20))*100+"%";
+
+if(min>=5&&!achievements.first)unlock("first");
+if(streak>=10&&!achievements.combo)unlock("combo");
+if(level>=5&&!achievements.level)unlock("level");
+if(points>=50&&!achievements.coins)unlock("coins");
+
+if(xp>=level*20){
+xp=0;level++;
+popup("Level Up");
 }
 
-/* ===== NEON MODE ===== */
-function toggleMode() {
-  neon = !neon;
-  document.body.style.background = neon ? "black" : "#111";
+updateUI();save();
 }
+
+/* ---------- TIMER + NIGHT MODE ---------- */
+let tm=0,ts=0,tInt=null;
+function startTimer(){
+tm=parseInt(tmin.value)||0;
+ts=0;
+clearInterval(tInt);
+
+tInt=setInterval(()=>{
+if(tm==0&&ts==0){
+clearInterval(tInt);
+popup("Time Up");
+return;
+}
+if(ts==0){tm--;ts=59}else ts--;
+ttime.innerText=`${String(tm).padStart(2,0)}:${String(ts).padStart(2,0)}`;
+},1000);
+}
+
+function nightCheck(){
+if(new Date().getHours()>=22){
+document.body.classList.add("night");
+document.getElementById("nightInfo").innerText="🌙 Night-Out Mode Active";
+if(!achievements.night)unlock("night");
+}
+}
+nightCheck();
+
+/* ---------- TASKS ---------- */
+function addTask(){
+let v=taskInput.value.trim();
+if(!v)return;
+let d=document.createElement("div");
+d.className="task";
+d.innerHTML=`${v} <button onclick="this.parentElement.remove()">✔</button>`;
+taskList.appendChild(d);
+taskInput.value="";
+}
+
+/* ---------- ACHIEVEMENTS ---------- */
+function unlock(a){
+achievements[a]=true;
+popup("Achievement Unlocked");
+renderAchievements();
+save();
+}
+
+function renderAchievements(){
+achievementsDiv.innerHTML="";
+const names={
+first:"First Focus (5 min)",
+combo:"Combo Master (10)",
+level:"Level Grinder (5)",
+coins:"Coin Hoarder (50)",
+night:"Night Owl (10 PM)"
+};
+for(let a in achievements){
+let d=document.createElement("div");
+d.className="achievement"+(achievements[a]?" unlocked":"");
+d.innerText=names[a];
+achievementsDiv.appendChild(d);
+}
+}
+
+/* ---------- RESET ---------- */
+function resetAll(){
+if(!confirm("Reset all progress?"))return;
+localStorage.clear();
+location.reload();
+}
+
+/* ---------- SAVE / LOAD ---------- */
+function updateUI(){
+xpSpan.innerText=xp;
+pointsSpan.innerText=points;
+streakSpan.innerText=streak;
+lvlSpan.innerText=level;
+}
+
+function save(){
+localStorage.setItem("focusarena",
+JSON.stringify({xp,level,points,streak,owned,achievements})
+);
+}
+
+function load(){
+let d=JSON.parse(localStorage.getItem("focusarena"));
+if(!d)return;
+({xp,level,points,streak,owned,achievements}=d);
+updateUI();renderAchievements();
+}
+
+/* ---------- INIT ---------- */
+const xpSpan=xp,pointsSpan=points,streakSpan=streak,lvlSpan=lvl;
+const achievementsDiv=document.getElementById("achievements");
+
+load();renderAchievements();
 </script>
 
 </body>
