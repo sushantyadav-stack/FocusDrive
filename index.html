@@ -6,11 +6,7 @@
 <title>Focus Arena – Classic</title>
 
 <style>
-*{
-font-family: monospace;
-transition:.25s;
-box-sizing:border-box;
-}
+*{font-family:monospace;box-sizing:border-box;transition:.25s}
 
 body{
 margin:0;
@@ -19,16 +15,12 @@ color:#eaeaea;
 text-align:center;
 }
 
-body.night{
-background:#0b0b0b;
-color:#b6c6c6;
-}
+body.night{background:#0b0b0b;color:#b6c6c6}
 
 header{
 background:#111;
 padding:14px;
 font-size:1.5em;
-letter-spacing:2px;
 border-bottom:2px solid #333;
 }
 
@@ -41,19 +33,11 @@ color:#eee;
 border-radius:6px;
 }
 
-nav button:hover{
-background:#333;
-}
-
-section{
-display:none;
-padding:12px;
-}
+section{display:none;padding:12px}
 section.active{display:block}
 
 .orb{
-width:100px;
-height:100px;
+width:100px;height:100px;
 margin:16px auto;
 border-radius:50%;
 background:#2e2e2e;
@@ -61,56 +45,31 @@ border:3px solid #555;
 }
 
 .bar{
-width:80%;
-height:14px;
+width:80%;height:14px;
 margin:10px auto;
-background:#333;
-border-radius:6px;
+background:#333;border-radius:6px;
 overflow:hidden;
 }
-.fill{
-height:100%;
-width:0%;
-background:#9fd3c7;
-}
+.fill{height:100%;width:0%;background:#9fd3c7}
 
 .popup{
 display:none;
 position:fixed;
-bottom:15px;
-left:10%;
-right:10%;
-background:#eee;
-color:#000;
-padding:10px;
-border-radius:8px;
+bottom:15px;left:10%;right:10%;
+background:#eee;color:#000;
+padding:10px;border-radius:8px;
 font-weight:bold;
 }
 
-.task, .achievement{
-background:#222;
-border:1px solid #444;
-margin:6px auto;
-padding:8px;
-border-radius:6px;
-width:85%;
-font-size:.9em;
+.box{
+background:#222;border:1px solid #444;
+margin:6px auto;padding:8px;
+border-radius:6px;width:85%;
 }
 
-.achievement.unlocked{
-background:#2f4f4f;
-color:#dff;
-}
+.owned{background:#2f4f4f}
 
-.tag{
-display:inline-block;
-padding:5px 10px;
-margin:4px;
-background:#ccc;
-color:#000;
-border-radius:6px;
-font-size:.8em;
-}
+button.buy{float:right}
 </style>
 </head>
 
@@ -121,8 +80,8 @@ font-size:.8em;
 <nav>
 <button onclick="show('play')">Play</button>
 <button onclick="show('timer')">Timer</button>
-<button onclick="show('tasks')">Quests</button>
-<button onclick="show('market')">Stats</button>
+<button onclick="show('market')">Market</button>
+<button onclick="show('stats')">Stats</button>
 <button onclick="resetAll()">Reset</button>
 </nav>
 
@@ -136,7 +95,8 @@ font-size:.8em;
 <button onclick="pause()">PAUSE</button>
 
 <p>Level: <span id="lvl">1</span></p>
-<p>Combo: <span id="streak">0</span></p>
+<p>Session Streak: 🔥 <span id="streak">0</span></p>
+<p>Daily Streak: 📅 <span id="dstreak">0</span></p>
 
 <div class="bar"><div id="energy" class="fill"></div></div>
 <p>XP: <span id="xp">0</span> | Coins: <span id="points">0</span></p>
@@ -150,51 +110,63 @@ font-size:.8em;
 <p id="nightInfo"></p>
 </section>
 
-<section id="tasks">
-<input id="taskInput" placeholder="New Quest">
-<button onclick="addTask()">Add</button>
-<div id="taskList"></div>
+<section id="market">
+<h3>🛒 Marketplace</h3>
+
+<div class="box">
+⚡ XP Boost (5 min) – 20 coins
+<button class="buy" onclick="buy('xp')">Buy</button>
+</div>
+
+<div class="box">
+🔥 Streak Shield – 15 coins
+<button class="buy" onclick="buy('shield')">Buy</button>
+</div>
+
+<div class="box">
+🌙 Night Pass – 10 coins
+<button class="buy" onclick="buy('night')">Buy</button>
+</div>
+
+<h3>🎒 Owned</h3>
+<div id="owned"></div>
 </section>
 
-<section id="market">
-<h3>🏆 Achievements</h3>
-<div id="achievements"></div>
-
-<h3>🎒 Owned Tags</h3>
-<div id="owned"></div>
+<section id="stats">
+<h3>📊 Stats</h3>
+<div class="box">Total Coins: <span id="sc">0</span></div>
+<div class="box">Highest Session Streak: <span id="hs">0</span></div>
 </section>
 
 <audio id="bgm" loop src="https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3"></audio>
 
 <script>
-/* ---------- STATE ---------- */
+/* STATE */
 let min=0,sec=0,timer=null;
-let xp=0,level=1,points=0,streak=0;
-let owned=[];
-let achievements={first:false,combo:false,level:false,coins:false,night:false};
+let xp=0,level=1,points=0;
+let streak=0,highStreak=0;
+let dailyStreak=0,lastDay="";
+let owned=[],boosts={xp:false,shield:false,night:false};
 
-/* ---------- ELEMENTS ---------- */
 const popupBox=document.getElementById("popup");
 const energy=document.getElementById("energy");
 const bgm=document.getElementById("bgm");
 
-/* ---------- UI ---------- */
+/* UI */
 function show(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
-
-function popup(msg){
-popupBox.innerText=msg;
+function popup(m){
+popupBox.innerText=m;
 popupBox.style.display="block";
 setTimeout(()=>popupBox.style.display="none",1500);
 }
 
-/* ---------- FOCUS MODE ---------- */
+/* FOCUS */
 function start(){
 if(timer)return;
-bgm.volume=.15;
-bgm.play();
+bgm.volume=.15;bgm.play();
 timer=setInterval(()=>{
 sec++;
 if(sec==60){sec=0;min++;gain();}
@@ -203,8 +175,10 @@ updateTime();
 }
 
 function pause(){
-clearInterval(timer);
-timer=null;
+clearInterval(timer);timer=null;
+if(boosts.shield){boosts.shield=false;popup("Shield Used")}
+else streak=0;
+save();
 }
 
 function updateTime(){
@@ -212,118 +186,102 @@ time.innerText=`${String(min).padStart(2,0)}:${String(sec).padStart(2,0)}`;
 }
 
 function gain(){
-xp++;points++;streak++;
+let gainXP=boosts.xp?2:1;
+xp+=gainXP;
+points+=boosts.night&&nightMode()?2:1;
+streak++;
+highStreak=Math.max(highStreak,streak);
+
 energy.style.width=(xp/(level*20))*100+"%";
 
-if(min>=5&&!achievements.first)unlock("first");
-if(streak>=10&&!achievements.combo)unlock("combo");
-if(level>=5&&!achievements.level)unlock("level");
-if(points>=50&&!achievements.coins)unlock("coins");
-
-if(xp>=level*20){
-xp=0;level++;
-popup("Level Up");
-}
+if(xp>=level*20){xp=0;level++;popup("Level Up")}
 
 updateUI();save();
 }
 
-/* ---------- TIMER + NIGHT MODE ---------- */
+/* TIMER */
 let tm=0,ts=0,tInt=null;
 function startTimer(){
-tm=parseInt(tmin.value)||0;
-ts=0;
+tm=parseInt(tmin.value)||0;ts=0;
 clearInterval(tInt);
-
 tInt=setInterval(()=>{
-if(tm==0&&ts==0){
-clearInterval(tInt);
-popup("Time Up");
-return;
-}
+if(tm==0&&ts==0){clearInterval(tInt);popup("Time Up");return;}
 if(ts==0){tm--;ts=59}else ts--;
 ttime.innerText=`${String(tm).padStart(2,0)}:${String(ts).padStart(2,0)}`;
 },1000);
 }
 
-function nightCheck(){
-if(new Date().getHours()>=22){
-document.body.classList.add("night");
-document.getElementById("nightInfo").innerText="🌙 Night-Out Mode Active";
-if(!achievements.night)unlock("night");
-}
-}
-nightCheck();
-
-/* ---------- TASKS ---------- */
-function addTask(){
-let v=taskInput.value.trim();
-if(!v)return;
-let d=document.createElement("div");
-d.className="task";
-d.innerHTML=`${v} <button onclick="this.parentElement.remove()">✔</button>`;
-taskList.appendChild(d);
-taskInput.value="";
+/* MARKET */
+function buy(item){
+const prices={xp:20,shield:15,night:10};
+if(points<prices[item])return popup("Not enough coins");
+points-=prices[item];
+owned.push(item);
+boosts[item]=true;
+popup("Purchased!");
+renderOwned();save();
 }
 
-/* ---------- ACHIEVEMENTS ---------- */
-function unlock(a){
-achievements[a]=true;
-popup("Achievement Unlocked");
-renderAchievements();
-save();
+function renderOwned(){
+ownedDiv.innerHTML=owned.map(o=>`<div class="box owned">${o}</div>`).join("");
 }
 
-function renderAchievements(){
-achievementsDiv.innerHTML="";
-const names={
-first:"First Focus (5 min)",
-combo:"Combo Master (10)",
-level:"Level Grinder (5)",
-coins:"Coin Hoarder (50)",
-night:"Night Owl (10 PM)"
-};
-for(let a in achievements){
-let d=document.createElement("div");
-d.className="achievement"+(achievements[a]?" unlocked":"");
-d.innerText=names[a];
-achievementsDiv.appendChild(d);
+/* DAILY STREAK */
+function checkDaily(){
+let today=new Date().toDateString();
+if(lastDay!==today){
+dailyStreak=lastDay?dailyStreak+1:1;
+points+=5;
+lastDay=today;
+popup("Daily Streak +5 coins");
 }
 }
 
-/* ---------- RESET ---------- */
+/* NIGHT */
+function nightMode(){
+return new Date().getHours()>=22;
+}
+if(nightMode())document.body.classList.add("night");
+
+/* RESET */
 function resetAll(){
-if(!confirm("Reset all progress?"))return;
+if(!confirm("Reset everything?"))return;
 localStorage.clear();
 location.reload();
 }
 
-/* ---------- SAVE / LOAD ---------- */
+/* SAVE / LOAD */
 function updateUI(){
 xpSpan.innerText=xp;
 pointsSpan.innerText=points;
 streakSpan.innerText=streak;
 lvlSpan.innerText=level;
+dstreakSpan.innerText=dailyStreak;
+sc.innerText=points;
+hs.innerText=highStreak;
 }
 
 function save(){
-localStorage.setItem("focusarena",
-JSON.stringify({xp,level,points,streak,owned,achievements})
-);
+localStorage.setItem("focusarena",JSON.stringify({
+xp,level,points,streak,highStreak,dailyStreak,lastDay,owned,boosts
+}));
 }
 
 function load(){
 let d=JSON.parse(localStorage.getItem("focusarena"));
 if(!d)return;
-({xp,level,points,streak,owned,achievements}=d);
-updateUI();renderAchievements();
+Object.assign({xp,level,points,streak,highStreak,dailyStreak,lastDay,owned,boosts},d);
+updateUI();renderOwned();
 }
 
-/* ---------- INIT ---------- */
+/* INIT */
 const xpSpan=xp,pointsSpan=points,streakSpan=streak,lvlSpan=lvl;
-const achievementsDiv=document.getElementById("achievements");
+const dstreakSpan=document.getElementById("dstreak");
+const ownedDiv=document.getElementById("owned");
+const sc=document.getElementById("sc");
+const hs=document.getElementById("hs");
 
-load();renderAchievements();
+load();checkDaily();renderOwned();
 </script>
 
 </body>
