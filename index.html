@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Focus Arena – Ultimate Productivity</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="manifest" href="/manifest.json">
 <style>
 /* ===== CSS RESET & VARIABLES ===== */
 :root {
@@ -33,33 +34,44 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== AUTH PAGES ===== */
-.auth-container {
+body {
+  background: linear-gradient(135deg, var(--darker) 0%, #1A1A2E 100%);
+  color: var(--light);
   min-height: 100vh;
+}
+
+/* ===== PROFILE SETUP ===== */
+.profile-setup-container {
   display: flex;
+  min-height: 100vh;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, var(--darker) 0%, #1A1A2E 100%);
   padding: 1rem;
 }
 
-.auth-box {
+.profile-box {
   background: rgba(18, 18, 18, 0.95);
   backdrop-filter: blur(10px);
   border-radius: var(--radius);
   padding: 2.5rem;
   width: 100%;
-  max-width: 450px;
+  max-width: 500px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: var(--shadow);
+  animation: fadeIn 0.5s ease;
 }
 
-.auth-header {
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-header {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.auth-logo {
+.profile-logo {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,13 +79,13 @@
   margin-bottom: 1.5rem;
 }
 
-.auth-logo i {
+.profile-logo i {
   color: var(--primary);
   font-size: 2.5rem;
   filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
 }
 
-.auth-logo h1 {
+.profile-logo h1 {
   font-size: 2rem;
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
@@ -81,124 +93,49 @@
   font-weight: 800;
 }
 
-.auth-subtitle {
+.profile-subtitle {
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 2rem;
   font-size: 1.1rem;
 }
 
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
+.avatar-selection {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group label {
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+.avatar-option {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.form-group input {
-  padding: 0.8rem 1rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-sm);
-  color: white;
-  font-size: 1rem;
+  justify-content: center;
+  font-size: 2rem;
+  cursor: pointer;
   transition: var(--transition);
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid transparent;
 }
 
-.form-group input:focus {
-  outline: none;
+.avatar-option:hover {
+  transform: scale(1.1);
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
 }
 
-.password-input {
-  position: relative;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-}
-
-.auth-btn {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
-  border: none;
-  padding: 1rem;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: var(--transition);
-  margin-top: 0.5rem;
-}
-
-.auth-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
-}
-
-.auth-btn:active {
-  transform: translateY(0);
-}
-
-.auth-switch {
-  text-align: center;
-  margin-top: 1.5rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.auth-link {
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 600;
-  margin-left: 0.5rem;
-  cursor: pointer;
-}
-
-.auth-link:hover {
-  text-decoration: underline;
-}
-
-.auth-error {
-  background: rgba(255, 107, 107, 0.1);
-  border: 1px solid rgba(255, 107, 107, 0.3);
-  color: #FF6B6B;
-  padding: 0.8rem;
-  border-radius: var(--radius-sm);
-  margin-bottom: 1rem;
-  display: none;
-}
-
-.auth-error.show {
-  display: block;
+.avatar-option.selected {
+  border-color: var(--primary);
+  background: rgba(0, 212, 255, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
 }
 
 /* ===== MAIN APP ===== */
 .app-container {
   display: none;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--darker) 0%, #1A1A2E 100%);
-  color: var(--light);
-  position: relative;
 }
 
 .app-container.active {
@@ -206,10 +143,6 @@
 }
 
 /* ===== SMOOTH NAVIGATION ===== */
-.nav-transition {
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
-}
-
 .section-enter {
   transform: translateX(20px);
   opacity: 0;
@@ -375,25 +308,6 @@ header {
   align-items: center;
   flex-wrap: wrap;
   justify-content: flex-end;
-}
-
-.logout-btn {
-  background: linear-gradient(135deg, #FF6B6B, #FF4757);
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.logout-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
 }
 
 /* ===== NAVIGATION ===== */
@@ -867,6 +781,354 @@ section.active {
   box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
 }
 
+/* ===== NEW FEATURES ===== */
+
+/* 1. Calendar Feature */
+.calendar-container {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-top: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 0.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.calendar-date {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.calendar-date:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.calendar-date.active {
+  background: var(--primary);
+  color: white;
+  transform: scale(1.1);
+}
+
+.calendar-date.has-session::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  width: 4px;
+  height: 4px;
+  background: var(--success);
+  border-radius: 50%;
+}
+
+/* 2. To-Do List */
+.todo-container {
+  margin-top: 2rem;
+}
+
+.todo-input-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: white;
+  font-size: 1rem;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.todo-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.todo-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid var(--primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.todo-checkbox.checked {
+  background: var(--primary);
+}
+
+.todo-checkbox.checked::after {
+  content: '✓';
+  color: white;
+  font-size: 12px;
+}
+
+.todo-text {
+  flex: 1;
+}
+
+.todo-priority {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.priority-high { background: rgba(255, 107, 107, 0.2); color: #FF6B6B; }
+.priority-medium { background: rgba(255, 193, 7, 0.2); color: #FFC107; }
+.priority-low { background: rgba(76, 175, 80, 0.2); color: #4CAF50; }
+
+/* 3. Notes Feature */
+.notes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.note-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.note-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+}
+
+.note-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.note-content {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.note-date {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 1rem;
+}
+
+/* 4. Goals Tracker */
+.goals-container {
+  margin-top: 2rem;
+}
+
+.goal-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.goal-progress {
+  margin-top: 1rem;
+}
+
+/* 5. Music Player */
+.music-player {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.music-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.music-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.music-btn:hover {
+  transform: scale(1.1);
+}
+
+/* 6. Pomodoro Timer */
+.pomodoro-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.pomodoro-display {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 1rem 0;
+}
+
+/* 7. Water Tracker */
+.water-tracker {
+  background: rgba(33, 150, 243, 0.1);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.water-glasses {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.water-glass {
+  width: 40px;
+  height: 60px;
+  background: rgba(33, 150, 243, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.water-glass.filled {
+  background: #2196F3;
+}
+
+/* 8. Mood Tracker */
+.mood-tracker {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.mood-option {
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+}
+
+.mood-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: scale(1.1);
+}
+
+.mood-option.selected {
+  background: rgba(0, 212, 255, 0.1);
+}
+
+.mood-emoji {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 9. Quick Notes */
+.quick-notes {
+  margin-top: 2rem;
+}
+
+.quick-note-input {
+  width: 100%;
+  min-height: 100px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: white;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+/* 10. Focus Music */
+.focus-music-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.music-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.music-track:hover {
+  background: rgba(0, 212, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.music-track.playing {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: var(--primary);
+}
+
 /* ===== MARKETPLACE ===== */
 .marketplace-section {
   padding: 2rem 0;
@@ -935,14 +1197,6 @@ section.active {
 .market-item.owned {
   background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(0, 212, 255, 0.1));
   border-color: var(--secondary);
-}
-
-.market-item.featured {
-  border: 2px solid var(--accent);
-}
-
-.market-item.popular {
-  border: 2px solid var(--warning);
 }
 
 .item-badge {
@@ -1206,72 +1460,15 @@ section.active {
   z-index: 10;
 }
 
-/* ===== FRIENDS SECTION ===== */
-.friends-section {
-  padding: 2rem 0;
-}
-
-.friends-search {
-  display: flex;
-  gap: 1rem;
-  margin: 2rem 0;
-  flex-wrap: wrap;
-  animation: fadeInUp 0.6s ease 0.3s both;
-}
-
-.search-input {
-  flex: 1;
-  min-width: 200px;
-  padding: 0.8rem 1rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-sm);
-  color: white;
-  font-size: 1rem;
-  transition: var(--transition);
-}
-
-.search-input:focus {
-  border-color: var(--primary);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-}
-
-.friends-tabs {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-  overflow-x: auto;
-  animation: fadeInUp 0.6s ease 0.4s both;
-}
-
-.friend-tab {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
-  padding: 0.8rem 1.5rem;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-}
-
-.friend-tab.active {
-  background: var(--primary);
-  color: var(--dark);
-  border-color: var(--primary);
-  transform: translateY(-2px);
-}
-
-.friends-grid {
+/* ===== ACHIEVEMENTS SECTION ===== */
+.achievements-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 
-.friend-card {
+.achievement-card {
   background: rgba(255, 255, 255, 0.05);
   border-radius: var(--radius);
   padding: 1.5rem;
@@ -1279,156 +1476,135 @@ section.active {
   transition: var(--transition);
   position: relative;
   overflow: hidden;
-  animation: fadeInUp 0.6s ease;
-  animation-fill-mode: both;
 }
 
-.friend-card:nth-child(1) { animation-delay: 0.1s; }
-.friend-card:nth-child(2) { animation-delay: 0.2s; }
-.friend-card:nth-child(3) { animation-delay: 0.3s; }
-.friend-card:nth-child(4) { animation-delay: 0.4s; }
-
-.friend-card:hover {
-  transform: translateY(-8px);
-  border-color: var(--primary);
-  box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+.achievement-card.locked {
+  opacity: 0.7;
+  filter: grayscale(0.5);
 }
 
-.friend-card.online {
+.achievement-card.unlocked {
   border-color: var(--success);
 }
 
-.friend-card.offline {
-  opacity: 0.7;
+.achievement-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
 }
 
-.friend-status {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  transition: var(--transition);
-}
-
-.friend-status.online { 
-  background: var(--success);
-  box-shadow: 0 0 10px var(--success);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
-}
-
-.friend-status.offline { background: var(--gray); }
-
-.friend-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.achievement-icon {
+  font-size: 2.5rem;
   margin-bottom: 1rem;
-}
-
-.friend-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
-  font-weight: 600;
-  transition: var(--transition);
-}
-
-.friend-card:hover .friend-avatar {
-  transform: scale(1.1) rotate(5deg);
-}
-
-.friend-info {
-  flex: 1;
-}
-
-.friend-name {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 0.2rem;
-}
-
-.friend-level {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.friend-stats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.8rem;
-  margin-top: 1rem;
-}
-
-.friend-stat {
   text-align: center;
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius-sm);
-  transition: var(--transition);
-}
-
-.friend-stat:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-}
-
-.stat-value-sm {
-  font-size: 1.2rem;
-  font-weight: 700;
   color: var(--primary);
 }
 
-.stat-label-sm {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.friend-actions {
-  display: flex;
-  gap: 0.5rem;
+.achievement-progress {
   margin-top: 1rem;
 }
 
-.action-btn {
-  flex: 1;
-  padding: 0.5rem;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
 
-.action-btn.challenge {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
+/* ===== SETTINGS SECTION ===== */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
-.action-btn.message {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+.setting-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.action-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+.setting-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: var(--transition);
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: var(--transition);
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* ===== MODALS ===== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: rgba(18, 18, 18, 0.95);
+  border-radius: var(--radius);
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow);
 }
 
 /* ===== NOTIFICATION ===== */
@@ -1479,13 +1655,17 @@ section.active {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
   
-  .friends-grid {
-    grid-template-columns: 1fr;
-  }
-  
   .orb-container {
     width: 220px;
     height: 220px;
+  }
+  
+  .avatar-selection {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .calendar-grid {
+    gap: 0.2rem;
   }
 }
 
@@ -1525,118 +1705,122 @@ section.active {
   .section-title {
     font-size: 1.8rem;
   }
+  
+  .avatar-selection {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Theme Colors */
+.theme-dark {
+  --primary: #00D4FF;
+  --primary-dark: #0099CC;
+  --secondary: #9D4EDD;
+  --accent: #FF6B6B;
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --dark: #121212;
+  --darker: #0A0A0A;
+  --light: #F8F9FA;
+}
+
+.theme-light {
+  --primary: #2563EB;
+  --primary-dark: #1D4ED8;
+  --secondary: #7C3AED;
+  --accent: #EF4444;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --dark: #F8FAFC;
+  --darker: #F1F5F9;
+  --light: #1E293B;
+  --gray: #E2E8F0;
+  --gray-light: #CBD5E1;
+}
+
+.theme-ocean {
+  --primary: #06B6D4;
+  --primary-dark: #0891B2;
+  --secondary: #0EA5E9;
+  --accent: #F97316;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --dark: #0F172A;
+  --darker: #1E293B;
+  --light: #F8FAFC;
+}
+
+.theme-forest {
+  --primary: #10B981;
+  --primary-dark: #059669;
+  --secondary: #84CC16;
+  --accent: #F97316;
+  --success: #22C55E;
+  --warning: #EAB308;
+  --dark: #064E3B;
+  --darker: #065F46;
+  --light: #F8FAFC;
+}
+
+.theme-sunset {
+  --primary: #F97316;
+  --primary-dark: #EA580C;
+  --secondary: #EAB308;
+  --accent: #EF4444;
+  --success: #84CC16;
+  --warning: #F59E0B;
+  --dark: #1E293B;
+  --darker: #0F172A;
+  --light: #F8FAFC;
 }
 </style>
 </head>
 <body>
 
-<!-- ===== AUTHENTICATION PAGES ===== -->
-<div id="authContainer" class="auth-container">
-  <!-- Login Page -->
-  <div id="loginPage" class="auth-box">
-    <div class="auth-header">
-      <div class="auth-logo">
+<!-- ===== PROFILE SETUP ===== -->
+<div id="profileSetup" class="profile-setup-container">
+  <div class="profile-box">
+    <div class="profile-header">
+      <div class="profile-logo">
         <i class="fas fa-bullseye"></i>
         <h1>FOCUS ARENA</h1>
       </div>
-      <h2>Welcome Back! ✨</h2>
-      <p class="auth-subtitle">Sign in to continue your productivity journey</p>
+      <h2>Welcome! Create Your Profile 🎮</h2>
+      <p class="profile-subtitle">Personalize your productivity journey</p>
     </div>
     
-    <div class="label-container">
-      <span class="label label-primary">
-        <i class="fas fa-rocket"></i> Level Up Your Focus
-      </span>
-    </div>
-    
-    <div id="authError" class="auth-error"></div>
-    
-    <form class="auth-form" id="loginForm">
+    <form id="profileForm">
       <div class="form-group">
-        <label for="loginEmail"><i class="fas fa-envelope"></i> Email</label>
-        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+        <label for="username"><i class="fas fa-user"></i> Your Name</label>
+        <input type="text" id="username" placeholder="Enter your name" required>
       </div>
       
       <div class="form-group">
-        <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
-        <div class="password-input">
-          <input type="password" id="loginPassword" placeholder="Enter your password" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
-            <i class="fas fa-eye"></i>
-          </button>
+        <label><i class="fas fa-smile"></i> Choose Avatar</label>
+        <div class="avatar-selection" id="avatarSelection">
+          <!-- Avatars will be generated -->
         </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="focusGoal"><i class="fas fa-bullseye"></i> Daily Focus Goal (minutes)</label>
+        <input type="number" id="focusGoal" min="15" max="480" value="120" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="productivityTheme"><i class="fas fa-palette"></i> Productivity Theme</label>
+        <select id="productivityTheme" class="time-input">
+          <option value="deep_work">Deep Work</option>
+          <option value="creative_flow">Creative Flow</option>
+          <option value="study_sessions">Study Sessions</option>
+          <option value="work_sprints">Work Sprints</option>
+        </select>
       </div>
       
       <button type="submit" class="auth-btn">
-        <i class="fas fa-sign-in-alt"></i> Sign In & Start Focusing
+        <i class="fas fa-rocket"></i> Start Productivity Journey
       </button>
     </form>
-    
-    <div class="auth-switch">
-      Don't have an account?
-      <a class="auth-link" onclick="showSignup()">Sign Up Now</a>
-    </div>
-  </div>
-  
-  <!-- Signup Page -->
-  <div id="signupPage" class="auth-box" style="display: none;">
-    <div class="auth-header">
-      <div class="auth-logo">
-        <i class="fas fa-bullseye"></i>
-        <h1>FOCUS ARENA</h1>
-      </div>
-      <h2>Join The Arena! 🚀</h2>
-      <p class="auth-subtitle">Join thousands boosting their productivity</p>
-    </div>
-    
-    <div class="label-container">
-      <span class="label label-secondary">
-        <i class="fas fa-gift"></i> Get 100 Bonus Coins
-      </span>
-    </div>
-    
-    <div id="signupError" class="auth-error"></div>
-    
-    <form class="auth-form" id="signupForm">
-      <div class="form-group">
-        <label for="signupUsername"><i class="fas fa-user"></i> Username</label>
-        <input type="text" id="signupUsername" placeholder="Choose a username" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="signupEmail"><i class="fas fa-envelope"></i> Email</label>
-        <input type="email" id="signupEmail" placeholder="Enter your email" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="signupPassword"><i class="fas fa-lock"></i> Password</label>
-        <div class="password-input">
-          <input type="password" id="signupPassword" placeholder="Create a password" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword')">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="confirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
-        <div class="password-input">
-          <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-      </div>
-      
-      <button type="submit" class="auth-btn">
-        <i class="fas fa-user-plus"></i> Create Account & Start Journey
-      </button>
-    </form>
-    
-    <div class="auth-switch">
-      Already have an account?
-      <a class="auth-link" onclick="showLogin()">Sign In Here</a>
-    </div>
   </div>
 </div>
 
@@ -1662,11 +1846,11 @@ section.active {
       </div>
       <div class="label-container">
         <span class="label label-accent" onclick="showProfileModal()">
-          <i class="fas fa-user"></i> <span id="username">User</span>
+          <i class="fas fa-user"></i> <span id="headerUsername">User</span>
         </span>
       </div>
-      <button class="logout-btn" onclick="logout()">
-        <i class="fas fa-sign-out-alt"></i> Logout
+      <button class="logout-btn" onclick="exportAllData()">
+        <i class="fas fa-download"></i> Export
       </button>
     </div>
   </header>
@@ -1678,20 +1862,32 @@ section.active {
         <i class="fas fa-play-circle"></i> Focus
         <div class="nav-btn-indicator"></div>
       </button>
-      <button class="nav-btn" data-section="marketplace" onclick="showSection('marketplace')">
-        <i class="fas fa-store"></i> Market
+      <button class="nav-btn" data-section="calendar" onclick="showSection('calendar')">
+        <i class="fas fa-calendar"></i> Calendar
         <div class="nav-btn-indicator"></div>
       </button>
-      <button class="nav-btn" data-section="friends" onclick="showSection('friends')">
-        <i class="fas fa-users"></i> Friends
+      <button class="nav-btn" data-section="todo" onclick="showSection('todo')">
+        <i class="fas fa-tasks"></i> To-Do
+        <div class="nav-btn-indicator"></div>
+      </button>
+      <button class="nav-btn" data-section="notes" onclick="showSection('notes')">
+        <i class="fas fa-sticky-note"></i> Notes
+        <div class="nav-btn-indicator"></div>
+      </button>
+      <button class="nav-btn" data-section="marketplace" onclick="showSection('marketplace')">
+        <i class="fas fa-store"></i> Market
         <div class="nav-btn-indicator"></div>
       </button>
       <button class="nav-btn" data-section="stats" onclick="showSection('stats')">
         <i class="fas fa-chart-bar"></i> Stats
         <div class="nav-btn-indicator"></div>
       </button>
-      <button class="nav-btn" data-section="leaderboard" onclick="showSection('leaderboard')">
-        <i class="fas fa-trophy"></i> Leaderboard
+      <button class="nav-btn" data-section="achievements" onclick="showSection('achievements')">
+        <i class="fas fa-medal"></i> Achievements
+        <div class="nav-btn-indicator"></div>
+      </button>
+      <button class="nav-btn" data-section="settings" onclick="showSection('settings')">
+        <i class="fas fa-cog"></i> Settings
         <div class="nav-btn-indicator"></div>
       </button>
     </nav>
@@ -1712,6 +1908,12 @@ section.active {
         </button>
         <button class="mode-btn" onclick="switchMode('stopwatch')">
           <i class="fas fa-stopwatch"></i> Stopwatch
+        </button>
+        <button class="mode-btn" onclick="switchMode('pomodoro')">
+          <i class="fas fa-redo"></i> Pomodoro
+        </button>
+        <button class="mode-btn" onclick="switchMode('habit')">
+          <i class="fas fa-check-circle"></i> Habits
         </button>
       </div>
       
@@ -1761,6 +1963,58 @@ section.active {
         <div id="lapTimes" style="margin: 2rem 0; max-height: 200px; overflow-y: auto;"></div>
       </div>
       
+      <!-- Pomodoro Mode -->
+      <div id="pomodoroMode" class="timer-container" style="display: none;">
+        <div class="orb-section">
+          <div class="orb-container">
+            <div class="orb"></div>
+          </div>
+          <div class="pomodoro-display" id="pomodoroDisplay">25:00</div>
+        </div>
+        
+        <div class="label-container">
+          <span class="label label-warning" id="pomodoroPhase">
+            <i class="fas fa-clock"></i> Focus Time
+          </span>
+        </div>
+        
+        <div class="pomodoro-settings">
+          <div style="display: flex; gap: 1rem; justify-content: center; margin: 1rem 0;">
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem;">Focus (min)</label>
+              <input type="number" id="focusTime" value="25" min="5" max="60" class="time-input" style="width: 80px;">
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem;">Break (min)</label>
+              <input type="number" id="breakTime" value="5" min="1" max="30" class="time-input" style="width: 80px;">
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem;">Sessions</label>
+              <input type="number" id="pomodoroSessions" value="4" min="1" max="12" class="time-input" style="width: 80px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Habit Mode -->
+      <div id="habitMode" class="timer-container" style="display: none;">
+        <div class="section-header">
+          <h3 class="section-title">Daily Habits 📝</h3>
+          <p class="section-subtitle">Build consistent productivity habits</p>
+        </div>
+        
+        <div id="habitsList" style="margin: 2rem 0;">
+          <!-- Habits will be dynamically generated -->
+        </div>
+        
+        <div class="control-buttons">
+          <button class="control-btn btn-start" onclick="addNewHabit()">
+            <i class="fas fa-plus"></i> Add New Habit
+          </button>
+        </div>
+      </div>
+      
+      <!-- Quick Actions -->
       <div class="control-buttons">
         <button class="control-btn btn-start" onclick="startTimer()" id="startBtn">
           <i class="fas fa-play"></i> START
@@ -1775,52 +2029,133 @@ section.active {
           <i class="fas fa-flag"></i> LAP
         </button>
       </div>
+      
+      <!-- Focus Music -->
+      <div class="focus-music">
+        <h3 style="text-align: center; margin: 2rem 0 1rem;">Focus Music 🎵</h3>
+        <div class="focus-music-grid" id="focusMusicGrid">
+          <!-- Music tracks will be dynamically generated -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section id="calendar">
+      <div class="section-header">
+        <h2 class="section-title">Productivity Calendar 📅</h2>
+        <p class="section-subtitle">Plan and track your productive days</p>
+      </div>
+      
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button class="control-btn btn-reset" onclick="prevMonth()">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <h3 id="currentMonth">January 2024</h3>
+          <button class="control-btn btn-start" onclick="nextMonth()">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        
+        <div class="calendar-grid" id="calendarDays">
+          <!-- Calendar will be dynamically generated -->
+        </div>
+      </div>
+      
+      <!-- Day Details -->
+      <div id="dayDetails" style="margin-top: 2rem; display: none;">
+        <h3 id="selectedDate">Selected Date</h3>
+        <div id="dayStats"></div>
+      </div>
+    </section>
+
+    <!-- To-Do List Section -->
+    <section id="todo">
+      <div class="section-header">
+        <h2 class="section-title">To-Do List ✅</h2>
+        <p class="section-subtitle">Organize your tasks and get things done</p>
+      </div>
+      
+      <div class="todo-container">
+        <div class="todo-input-container">
+          <input type="text" class="todo-input" id="newTodo" placeholder="Add a new task...">
+          <select id="todoPriority" class="time-input" style="width: 120px;">
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+          <button class="control-btn btn-start" onclick="addTodo()">
+            <i class="fas fa-plus"></i> Add
+          </button>
+        </div>
+        
+        <div class="todo-list" id="todoList">
+          <!-- To-do items will be dynamically generated -->
+        </div>
+      </div>
+      
+      <!-- Task Statistics -->
+      <div class="stats-grid" style="margin-top: 2rem;">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+          <div class="stat-value" id="totalTasks">0</div>
+          <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-value" id="completedTasks">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-fire"></i></div>
+          <div class="stat-value" id="productivityScore">0%</div>
+          <div class="stat-label">Productivity</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes Section -->
+    <section id="notes">
+      <div class="section-header">
+        <h2 class="section-title">Quick Notes 📝</h2>
+        <p class="section-subtitle">Capture ideas, thoughts, and important information</p>
+      </div>
+      
+      <div class="quick-notes">
+        <textarea class="quick-note-input" id="quickNote" placeholder="Start typing your note here..."></textarea>
+        <div class="control-buttons" style="margin-top: 1rem;">
+          <button class="control-btn btn-start" onclick="saveQuickNote()">
+            <i class="fas fa-save"></i> Save Note
+          </button>
+          <button class="control-btn btn-reset" onclick="clearQuickNote()">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+      </div>
+      
+      <div class="notes-container" id="notesContainer">
+        <!-- Notes will be dynamically generated -->
+      </div>
     </section>
 
     <!-- Marketplace Section -->
     <section id="marketplace">
       <div class="section-header">
         <h2 class="section-title">Marketplace 🛍️</h2>
-        <p class="section-subtitle">Enhance your focus experience with power-ups and items</p>
+        <p class="section-subtitle">Enhance your productivity experience</p>
       </div>
       
       <div class="market-filters">
-        <button class="filter-btn active" onclick="filterMarket('all')">All Items</button>
-        <button class="filter-btn" onclick="filterMarket('boosts')">Boosts</button>
+        <button class="filter-btn active" onclick="filterMarket('all')">All</button>
         <button class="filter-btn" onclick="filterMarket('themes')">Themes</button>
-        <button class="filter-btn" onclick="filterMarket('skins')">Skins</button>
-        <button class="filter-btn" onclick="filterMarket('consumables')">Consumables</button>
+        <button class="filter-btn" onclick="filterMarket('effects')">Effects</button>
+        <button class="filter-btn" onclick="filterMarket('sounds')">Sounds</button>
+        <button class="filter-btn" onclick="filterMarket('tools')">Tools</button>
         <button class="filter-btn" onclick="filterMarket('premium')">Premium</button>
       </div>
       
       <div class="marketplace-grid" id="marketplaceGrid">
         <!-- Items will be dynamically generated -->
-      </div>
-    </section>
-
-    <!-- Friends Section -->
-    <section id="friends">
-      <div class="section-header">
-        <h2 class="section-title">Friends & Community 👥</h2>
-        <p class="section-subtitle">Connect, compete, and grow together</p>
-      </div>
-      
-      <div class="friends-search">
-        <input type="text" class="search-input" id="friendSearch" placeholder="Search friends by username...">
-        <button class="control-btn btn-start" onclick="searchFriends()">
-          <i class="fas fa-search"></i> Search
-        </button>
-      </div>
-      
-      <div class="friends-tabs">
-        <button class="friend-tab active" onclick="showFriendsTab('all')">All Friends</button>
-        <button class="friend-tab" onclick="showFriendsTab('online')">Online</button>
-        <button class="friend-tab" onclick="showFriendsTab('requests')">Requests</button>
-        <button class="friend-tab" onclick="showFriendsTab('challenges')">Challenges</button>
-      </div>
-      
-      <div class="friends-grid" id="friendsGrid">
-        <!-- Friends will be dynamically generated -->
       </div>
     </section>
 
@@ -1835,7 +2170,7 @@ section.active {
         <div class="stat-card">
           <div class="stat-icon"><i class="fas fa-coins"></i></div>
           <div class="stat-value" id="totalCoins">0</div>
-          <div class="stat-label">Total Coins Earned</div>
+          <div class="stat-label">Total Coins</div>
           <div class="stat-progress">
             <div class="progress-bar">
               <div class="progress-fill" id="coinsProgress" style="width: 0%"></div>
@@ -1857,7 +2192,7 @@ section.active {
         <div class="stat-card">
           <div class="stat-icon"><i class="fas fa-clock"></i></div>
           <div class="stat-value" id="totalFocusTime">0h</div>
-          <div class="stat-label">Total Focus Time</div>
+          <div class="stat-label">Focus Time</div>
           <div class="stat-progress">
             <div class="progress-bar">
               <div class="progress-fill" id="timeProgress" style="width: 0%"></div>
@@ -1879,7 +2214,7 @@ section.active {
         <div class="stat-card">
           <div class="stat-icon"><i class="fas fa-tasks"></i></div>
           <div class="stat-value" id="completedSessions">0</div>
-          <div class="stat-label">Completed Sessions</div>
+          <div class="stat-label">Sessions</div>
           <div class="stat-progress">
             <div class="progress-bar">
               <div class="progress-fill" id="sessionsProgress" style="width: 0%"></div>
@@ -1889,8 +2224,8 @@ section.active {
         
         <div class="stat-card">
           <div class="stat-icon"><i class="fas fa-star"></i></div>
-          <div class="stat-value" id="achievements">0</div>
-          <div class="stat-label">Achievements Unlocked</div>
+          <div class="stat-value" id="achievementsCount">0</div>
+          <div class="stat-label">Achievements</div>
           <div class="stat-progress">
             <div class="progress-bar">
               <div class="progress-fill" id="achievementsProgress" style="width: 0%"></div>
@@ -1903,32 +2238,202 @@ section.active {
         <h3 class="chart-title">Weekly Focus Trend</h3>
         <div class="chart-container">
           <div class="chart" id="weeklyChart">
-            <!-- Chart will be generated -->
+            <!-- Chart will be generated from real data -->
           </div>
+        </div>
+      </div>
+      
+      <!-- Water Tracker -->
+      <div class="water-tracker">
+        <h3>💧 Water Tracker</h3>
+        <p>Stay hydrated for better focus</p>
+        <div class="water-glasses" id="waterGlasses">
+          <!-- Water glasses will be dynamically generated -->
+        </div>
+        <button class="control-btn btn-start" onclick="resetWaterTracker()" style="margin-top: 1rem;">
+          <i class="fas fa-redo"></i> Reset
+        </button>
+      </div>
+      
+      <!-- Mood Tracker -->
+      <div class="mood-tracker">
+        <div class="mood-option" onclick="setMood('happy')">
+          <div class="mood-emoji">😊</div>
+          <div>Happy</div>
+        </div>
+        <div class="mood-option" onclick="setMood('productive')">
+          <div class="mood-emoji">🚀</div>
+          <div>Productive</div>
+        </div>
+        <div class="mood-option" onclick="setMood('tired')">
+          <div class="mood-emoji">😴</div>
+          <div>Tired</div>
+        </div>
+        <div class="mood-option" onclick="setMood('focused')">
+          <div class="mood-emoji">🎯</div>
+          <div>Focused</div>
         </div>
       </div>
     </section>
 
-    <!-- Leaderboard Section -->
-    <section id="leaderboard">
+    <!-- Achievements Section -->
+    <section id="achievements">
       <div class="section-header">
-        <h2 class="section-title">Leaderboard 🏆</h2>
-        <p class="section-subtitle">See where you stand among top performers</p>
+        <h2 class="section-title">Achievements 🏆</h2>
+        <p class="section-subtitle">Unlock rewards for your productivity</p>
       </div>
       
-      <div class="leaderboard-container">
-        <div class="friends-tabs">
-          <button class="friend-tab active" onclick="showLeaderboard('weekly')">Weekly</button>
-          <button class="friend-tab" onclick="showLeaderboard('monthly')">Monthly</button>
-          <button class="friend-tab" onclick="showLeaderboard('alltime')">All Time</button>
-          <button class="friend-tab" onclick="showLeaderboard('friends')">Friends</button>
+      <div class="achievements-grid" id="achievementsGrid">
+        <!-- Achievements will be dynamically generated -->
+      </div>
+    </section>
+
+    <!-- Settings Section -->
+    <section id="settings">
+      <div class="section-header">
+        <h2 class="section-title">Settings ⚙️</h2>
+        <p class="section-subtitle">Customize your experience</p>
+      </div>
+      
+      <div class="settings-grid">
+        <div class="setting-card">
+          <h3 style="margin-bottom: 1.5rem; color: var(--primary);">App Settings</h3>
+          
+          <div class="setting-option">
+            <span>Sound Effects</span>
+            <label class="switch">
+              <input type="checkbox" id="soundEffects" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="setting-option">
+            <span>Notifications</span>
+            <label class="switch">
+              <input type="checkbox" id="notifications" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="setting-option">
+            <span>Focus Reminders</span>
+            <label class="switch">
+              <input type="checkbox" id="focusReminders" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="setting-option">
+            <span>Auto-save Notes</span>
+            <label class="switch">
+              <input type="checkbox" id="autoSave" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
         </div>
         
-        <div class="leaderboard-list" id="leaderboardContent">
-          <!-- Leaderboard will be dynamically generated -->
+        <div class="setting-card">
+          <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Timer Settings</h3>
+          
+          <div class="setting-option">
+            <span>Default Timer (min)</span>
+            <input type="number" id="defaultTimer" value="25" min="5" max="120" style="width: 80px; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 4px;">
+          </div>
+          
+          <div class="setting-option">
+            <span>Auto-start Breaks</span>
+            <label class="switch">
+              <input type="checkbox" id="autoBreak" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="setting-option">
+            <span>End Session Sound</span>
+            <select id="endSound" style="width: 120px; padding: 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 4px;">
+              <option value="bell">Bell</option>
+              <option value="chime">Chime</option>
+              <option value="beep">Beep</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="setting-card">
+          <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Data Management</h3>
+          
+          <button class="control-btn btn-start" onclick="exportAllData()" style="width: 100%; margin-bottom: 1rem;">
+            <i class="fas fa-download"></i> Export All Data
+          </button>
+          
+          <button class="control-btn btn-pause" onclick="importData()" style="width: 100%; margin-bottom: 1rem;">
+            <i class="fas fa-upload"></i> Import Data
+          </button>
+          
+          <button class="control-btn btn-reset" onclick="resetAppData()" style="width: 100%;">
+            <i class="fas fa-trash"></i> Reset All Data
+          </button>
+        </div>
+      </div>
+      
+      <!-- Theme Selector -->
+      <div class="setting-card" style="margin-top: 2rem;">
+        <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Theme Selection</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+          <div class="theme-option" onclick="changeTheme('dark')" style="padding: 1rem; background: #121212; border-radius: var(--radius-sm); cursor: pointer; text-align: center;">
+            <div style="color: #00D4FF; font-size: 1.2rem; margin-bottom: 0.5rem;">🌙</div>
+            <div>Dark Theme</div>
+          </div>
+          <div class="theme-option" onclick="changeTheme('light')" style="padding: 1rem; background: #F8FAFC; border-radius: var(--radius-sm); cursor: pointer; text-align: center; color: #1E293B;">
+            <div style="color: #2563EB; font-size: 1.2rem; margin-bottom: 0.5rem;">☀️</div>
+            <div>Light Theme</div>
+          </div>
+          <div class="theme-option" onclick="changeTheme('ocean')" style="padding: 1rem; background: #0F172A; border-radius: var(--radius-sm); cursor: pointer; text-align: center;">
+            <div style="color: #06B6D4; font-size: 1.2rem; margin-bottom: 0.5rem;">🌊</div>
+            <div>Ocean Theme</div>
+          </div>
+          <div class="theme-option" onclick="changeTheme('forest')" style="padding: 1rem; background: #064E3B; border-radius: var(--radius-sm); cursor: pointer; text-align: center;">
+            <div style="color: #10B981; font-size: 1.2rem; margin-bottom: 0.5rem;">🌳</div>
+            <div>Forest Theme</div>
+          </div>
         </div>
       </div>
     </section>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="profileModal" class="modal">
+    <div class="modal-content">
+      <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Profile Settings</h2>
+      
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div class="avatar-option selected" style="width: 100px; height: 100px; margin: 0 auto 1rem; font-size: 3rem;" id="modalAvatar">
+          👨‍💻
+        </div>
+        <h3 id="modalUsername">Username</h3>
+        <p style="color: rgba(255,255,255,0.7);" id="modalLevel">Level 1 • 0 XP</p>
+      </div>
+      
+      <div class="form-group">
+        <label for="editUsername">Change Name</label>
+        <input type="text" id="editUsername" placeholder="Enter new name">
+      </div>
+      
+      <div class="form-group">
+        <label for="editAvatar">Change Avatar</label>
+        <div class="avatar-selection" id="modalAvatarSelection">
+          <!-- Avatars will be generated -->
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <button class="control-btn btn-start" onclick="updateProfile()" style="flex: 1;">
+          <i class="fas fa-save"></i> Save Changes
+        </button>
+        <button class="control-btn btn-reset" onclick="closeModal('profileModal')" style="flex: 1;">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Notification -->
@@ -1943,6 +2448,7 @@ section.active {
 let currentUser = null;
 let timerInterval = null;
 let stopwatchInterval = null;
+let pomodoroInterval = null;
 let timerMode = 'timer';
 let stopwatchTime = 0;
 let stopwatchRunning = false;
@@ -1954,417 +2460,525 @@ let currentTimer = {
   running: false,
   totalSeconds: 25 * 60
 };
+let pomodoroState = {
+  isRunning: false,
+  isBreak: false,
+  focusTime: 25 * 60,
+  breakTime: 5 * 60,
+  sessions: 0,
+  totalSessions: 4,
+  currentTime: 25 * 60
+};
 let orbPulse = true;
+let currentDate = new Date();
+let selectedMood = null;
 
-// ===== SIMULATED DATABASE =====
-class SimulatedBackend {
+// ===== AVATARS =====
+const avatars = [
+  '👨‍💻', '👩‍💻', '🧑‍🎓', '👨‍🎓', '👩‍🎓', '🧙‍♂️', '🧙‍♀️', '🦸‍♂️', '🦸‍♀️', '🧚‍♂️', '🧚‍♀️',
+  '🧜‍♂️', '🧜‍♀️', '🐱', '🐶', '🦊', '🐼', '🐯', '🦁', '🐮', '🐷', '🐸',
+  '🐵', '🐔', '🐧', '🐦', '🦉', '🦄', '🐙', '🦋', '🐝', '🐢', '🦖',
+  '🦕', '🐉', '🦚', '🦜', '🐬', '🦈', '🐋', '🐘', '🦒', '🦘', '🦏',
+  '🦛', '🐪', '🐫', '🦙', '🦌', '🐐', '🐏', '🐑', '🐎', '🦄', '🦓'
+];
+
+// ===== OFFLINE DATABASE =====
+class OfflineDatabase {
   constructor() {
-    this.users = JSON.parse(localStorage.getItem('focusArenaUsers')) || [
-      {
-        id: '1',
-        username: 'FocusMaster',
-        email: 'master@focus.com',
-        password: 'hashedpassword123',
-        level: 25,
-        coins: 5000,
-        totalFocusTime: 15000,
-        streak: 42,
-        avatar: '👑',
-        friends: ['2', '3'],
-        ownedItems: [1, 2, 3],
-        achievements: 15,
-        sessions: 120
-      },
-      {
-        id: '2',
-        username: 'StudyBuddy',
-        email: 'buddy@study.com',
-        password: 'hashedpassword123',
-        level: 18,
-        coins: 3200,
-        totalFocusTime: 9800,
-        streak: 31,
-        avatar: '📚',
-        friends: ['1'],
-        ownedItems: [1, 6],
-        achievements: 12,
-        sessions: 85
-      },
-      {
-        id: '3',
-        username: 'NightOwl',
-        email: 'owl@night.com',
-        password: 'hashedpassword123',
-        level: 22,
-        coins: 4500,
-        totalFocusTime: 12500,
-        streak: 28,
-        avatar: '🦉',
-        friends: ['1'],
-        ownedItems: [1, 2, 3, 4],
-        achievements: 18,
-        sessions: 110
-      }
-    ];
-    
+    this.loadData();
+  }
+  
+  loadData() {
+    // Load user data
+    this.user = JSON.parse(localStorage.getItem('focusArenaUser')) || null;
+    this.sessions = JSON.parse(localStorage.getItem('focusArenaSessions')) || [];
+    this.habits = JSON.parse(localStorage.getItem('focusArenaHabits')) || [];
+    this.todos = JSON.parse(localStorage.getItem('focusArenaTodos')) || [];
+    this.notes = JSON.parse(localStorage.getItem('focusArenaNotes')) || [];
+    this.achievements = JSON.parse(localStorage.getItem('focusArenaAchievements')) || this.generateAchievements();
+    this.settings = JSON.parse(localStorage.getItem('focusArenaSettings')) || this.defaultSettings();
+    this.calendarData = JSON.parse(localStorage.getItem('focusArenaCalendar')) || {};
     this.marketItems = this.generateMarketItems();
-    this.leaderboard = JSON.parse(localStorage.getItem('focusArenaLeaderboard')) || this.generateLeaderboard();
-    this.friendships = JSON.parse(localStorage.getItem('focusArenaFriendships')) || [];
     
-    setInterval(() => this.saveToLocalStorage(), 5000);
+    // Initialize if no user exists
+    if (!this.user) {
+      this.initializeDemoData();
+    }
+  }
+  
+  initializeDemoData() {
+    this.user = {
+      id: 'user_' + Date.now(),
+      username: 'Productivity Master',
+      avatar: '👨‍💻',
+      level: 1,
+      coins: 100,
+      xp: 0,
+      totalFocusTime: 0,
+      streak: 0,
+      dailyGoal: 120,
+      theme: 'deep_work',
+      achievements: [1],
+      ownedItems: [1],
+      createdAt: new Date().toISOString(),
+      lastLogin: new Date().toISOString(),
+      dailyStreakDate: null
+    };
+    
+    this.saveData();
+  }
+  
+  defaultSettings() {
+    return {
+      soundEffects: true,
+      notifications: true,
+      focusReminders: true,
+      autoSave: true,
+      defaultTimer: 25,
+      autoBreak: true,
+      endSound: 'bell',
+      theme: 'dark'
+    };
   }
   
   generateMarketItems() {
     return [
-      // Boosts (8 items)
-      { id: 1, name: "XP Boost", description: "Earn 2x XP for 1 hour", icon: "fas fa-bolt", price: 100, type: "boost", category: "boosts", duration: 3600000, rarity: "common" },
-      { id: 2, name: "Streak Shield", description: "Protect your streak for one session", icon: "fas fa-shield-alt", price: 250, type: "protection", category: "boosts", rarity: "uncommon" },
-      { id: 3, name: "Double Coins", description: "Earn 2x coins for 30 minutes", icon: "fas fa-coins", price: 150, type: "boost", category: "boosts", duration: 1800000, rarity: "uncommon" },
-      { id: 4, name: "Focus Mastery", description: "Unlock advanced focus techniques", icon: "fas fa-brain", price: 500, type: "skill", category: "boosts", rarity: "rare" },
-      { id: 5, name: "Time Warp", description: "25% faster timer completion", icon: "fas fa-hourglass-end", price: 300, type: "boost", category: "boosts", duration: 3600000, rarity: "rare" },
-      { id: 6, name: "Productivity Wave", description: "Auto-start breaks and sessions", icon: "fas fa-wave-square", price: 400, type: "automation", category: "boosts", rarity: "epic" },
-      { id: 7, name: "Mind Palace", description: "Unlock memory techniques", icon: "fas fa-landmark", price: 750, type: "skill", category: "boosts", rarity: "epic" },
-      { id: 8, name: "Ultimate Focus", description: "All boosts active for 2 hours", icon: "fas fa-crown", price: 1000, type: "boost", category: "boosts", duration: 7200000, rarity: "legendary" },
+      // Themes
+      { id: 1, name: "Dark Theme", description: "Default dark theme", icon: "fas fa-moon", price: 0, type: "theme", category: "themes", rarity: "common", data: { theme: "dark" } },
+      { id: 2, name: "Light Theme", description: "Clean light theme", icon: "fas fa-sun", price: 100, type: "theme", category: "themes", rarity: "common", data: { theme: "light" } },
+      { id: 3, name: "Ocean Theme", description: "Calm ocean colors", icon: "fas fa-water", price: 200, type: "theme", category: "themes", rarity: "uncommon", data: { theme: "ocean" } },
+      { id: 4, name: "Forest Theme", description: "Nature inspired theme", icon: "fas fa-tree", price: 200, type: "theme", category: "themes", rarity: "uncommon", data: { theme: "forest" } },
+      { id: 5, name: "Sunset Theme", description: "Warm sunset colors", icon: "fas fa-sunset", price: 300, type: "theme", category: "themes", rarity: "rare", data: { theme: "sunset" } },
+      { id: 6, name: "Neon Theme", description: "Vibrant neon colors", icon: "fas fa-lightbulb", price: 500, type: "theme", category: "themes", rarity: "epic", data: { theme: "neon" } },
       
-      // Themes (6 items)
-      { id: 9, name: "Night Pass", description: "Unlock night themes and bonuses", icon: "fas fa-moon", price: 500, type: "theme", category: "themes", rarity: "rare" },
-      { id: 10, name: "Ocean Theme", description: "Calm ocean sounds and visuals", icon: "fas fa-water", price: 300, type: "theme", category: "themes", rarity: "uncommon" },
-      { id: 11, name: "Forest Theme", description: "Nature sounds and green theme", icon: "fas fa-tree", price: 350, type: "theme", category: "themes", rarity: "uncommon" },
-      { id: 12, name: "Space Theme", description: "Cosmic background and effects", icon: "fas fa-rocket", price: 600, type: "theme", category: "themes", rarity: "rare" },
-      { id: 13, name: "Retro Theme", description: "80s inspired colors and sounds", icon: "fas fa-gamepad", price: 450, type: "theme", category: "themes", rarity: "rare" },
-      { id: 14, name: "Cyberpunk Theme", description: "Neon colors and cyber sounds", icon: "fas fa-robot", price: 800, type: "theme", category: "themes", rarity: "epic" },
+      // Effects
+      { id: 7, name: "Particle Effects", description: "Beautiful particle animations", icon: "fas fa-sparkles", price: 150, type: "effect", category: "effects", rarity: "uncommon" },
+      { id: 8, name: "Confetti Burst", description: "Celebrate achievements with confetti", icon: "fas fa-birthday-cake", price: 100, type: "effect", category: "effects", rarity: "common" },
+      { id: 9, name: "Orb Glow", description: "Enhanced orb glow effects", icon: "fas fa-circle", price: 200, type: "effect", category: "effects", rarity: "rare" },
       
-      // Skins (6 items)
-      { id: 15, name: "Golden Timer", description: "Exclusive golden timer skin", icon: "fas fa-stopwatch", price: 1000, type: "skin", category: "skins", rarity: "epic" },
-      { id: 16, name: "Crystal Timer", description: "Transparent glass-like timer", icon: "fas fa-gem", price: 750, type: "skin", category: "skins", rarity: "rare" },
-      { id: 17, name: "Fire Timer", description: "Animated fire effects timer", icon: "fas fa-fire", price: 900, type: "skin", category: "skins", rarity: "epic" },
-      { id: 18, name: "Ice Timer", description: "Frozen ice crystal timer", icon: "fas fa-snowflake", price: 850, type: "skin", category: "skins", rarity: "rare" },
-      { id: 19, name: "Neon Timer", description: "Glowing neon timer skin", icon: "fas fa-lightbulb", price: 700, type: "skin", category: "skins", rarity: "uncommon" },
-      { id: 20, name: "Hologram Timer", description: "Futuristic holographic timer", icon: "fas fa-project-diagram", price: 1200, type: "skin", category: "skins", rarity: "legendary" },
+      // Sounds
+      { id: 10, name: "Rain Sounds", description: "Calming rain sounds", icon: "fas fa-cloud-rain", price: 100, type: "sound", category: "sounds", rarity: "common" },
+      { id: 11, name: "Forest Sounds", description: "Nature ambience", icon: "fas fa-tree", price: 150, type: "sound", category: "sounds", rarity: "uncommon" },
+      { id: 12, name: "White Noise", description: "Focus-enhancing white noise", icon: "fas fa-volume-up", price: 100, type: "sound", category: "sounds", rarity: "common" },
       
-      // Consumables (6 items)
-      { id: 21, name: "Energy Drink", description: "Instant 30-minute focus boost", icon: "fas fa-wine-bottle", price: 300, type: "consumable", category: "consumables", rarity: "common" },
-      { id: 22, name: "Focus Pill", description: "Remove distractions for 1 hour", icon: "fas fa-capsules", price: 250, type: "consumable", category: "consumables", rarity: "common" },
-      { id: 23, name: "Brain Food", description: "+50% XP for next session", icon: "fas fa-apple-alt", price: 200, type: "consumable", category: "consumables", rarity: "uncommon" },
-      { id: 24, name: "Time Capsule", description: "Save and restore focus time", icon: "fas fa-capsule", price: 400, type: "consumable", category: "consumables", rarity: "rare" },
-      { id: 25, name: "Miracle Potion", description: "Reset streak without penalty", icon: "fas fa-flask", price: 500, type: "consumable", category: "consumables", rarity: "epic" },
-      { id: 26, name: "Elixir of Focus", description: "All consumable effects combined", icon: "fas fa-vial", price: 1500, type: "consumable", category: "consumables", rarity: "legendary" },
+      // Tools
+      { id: 13, name: "Advanced Stats", description: "Detailed productivity analytics", icon: "fas fa-chart-line", price: 300, type: "tool", category: "tools", rarity: "rare" },
+      { id: 14, name: "Habit Templates", description: "Pre-made habit templates", icon: "fas fa-clipboard-list", price: 200, type: "tool", category: "tools", rarity: "uncommon" },
+      { id: 15, name: "Focus Music Pack", description: "Curated focus music collection", icon: "fas fa-music", price: 250, type: "tool", category: "tools", rarity: "rare" },
       
-      // Premium (8 items)
-      { id: 27, name: "Focus Master", description: "Unlock all features permanently", icon: "fas fa-crown", price: 5000, type: "premium", category: "premium", rarity: "mythic" },
-      { id: 28, name: "Study Music Pack", description: "Unlock focus music collection", icon: "fas fa-music", price: 750, type: "audio", category: "premium", rarity: "rare" },
-      { id: 29, name: "Analytics Pro", description: "Advanced productivity analytics", icon: "fas fa-chart-line", price: 1500, type: "premium", category: "premium", rarity: "epic" },
-      { id: 30, name: "AI Coach", description: "Personalized focus coaching", icon: "fas fa-robot", price: 2000, type: "premium", category: "premium", rarity: "legendary" },
-      { id: 31, name: "Team Features", description: "Unlock group focus sessions", icon: "fas fa-users", price: 1200, type: "premium", category: "premium", rarity: "epic" },
-      { id: 32, name: "Cloud Backup", description: "Secure cloud save and sync", icon: "fas fa-cloud", price: 800, type: "premium", category: "premium", rarity: "rare" },
-      { id: 33, name: "Custom Themes", description: "Create your own themes", icon: "fas fa-palette", price: 1000, type: "premium", category: "premium", rarity: "epic" },
-      { id: 34, name: "Early Access", description: "Access to beta features", icon: "fas fa-star", price: 3000, type: "premium", category: "premium", rarity: "legendary" }
+      // Premium
+      { id: 16, name: "Unlimited Themes", description: "Access all themes", icon: "fas fa-palette", price: 1000, type: "premium", category: "premium", rarity: "legendary" },
+      { id: 17, name: "All Effects Pack", description: "All visual effects", icon: "fas fa-magic", price: 800, type: "premium", category: "premium", rarity: "epic" },
+      { id: 18, name: "Pro Features", description: "All premium features", icon: "fas fa-crown", price: 2000, type: "premium", category: "premium", rarity: "mythic" }
     ];
   }
   
-  generateLeaderboard() {
-    return this.users.map(user => ({
-      userId: user.id,
-      username: user.username,
-      level: user.level,
-      coins: user.coins,
-      totalFocusTime: user.totalFocusTime,
-      streak: user.streak,
-      weeklyFocus: Math.floor(Math.random() * 1000) + 500,
-      monthlyFocus: Math.floor(Math.random() * 5000) + 2000
-    })).sort((a, b) => b.totalFocusTime - a.totalFocusTime);
+  generateAchievements() {
+    return [
+      { id: 1, name: "First Focus", description: "Complete your first focus session", icon: "fas fa-baby", points: 10, requirement: { type: "sessions", value: 1 } },
+      { id: 2, name: "Focus Novice", description: "Complete 10 focus sessions", icon: "fas fa-graduation-cap", points: 50, requirement: { type: "sessions", value: 10 } },
+      { id: 3, name: "Time Master", description: "Accumulate 10 hours of focus", icon: "fas fa-clock", points: 100, requirement: { type: "time", value: 36000 } },
+      { id: 4, name: "Week Warrior", description: "7-day focus streak", icon: "fas fa-fire", points: 75, requirement: { type: "streak", value: 7 } },
+      { id: 5, name: "Task Master", description: "Complete 50 tasks", icon: "fas fa-tasks", points: 80, requirement: { type: "tasks", value: 50 } },
+      { id: 6, name: "Note Taker", description: "Create 20 notes", icon: "fas fa-sticky-note", points: 40, requirement: { type: "notes", value: 20 } },
+      { id: 7, name: "Habit Builder", description: "Maintain a habit for 30 days", icon: "fas fa-check-circle", points: 120, requirement: { type: "habit", value: 30 } },
+      { id: 8, name: "Market Expert", description: "Purchase 10 items", icon: "fas fa-store", points: 60, requirement: { type: "purchases", value: 10 } },
+      { id: 9, name: "Early Bird", description: "Focus before 8 AM", icon: "fas fa-sun", points: 30, requirement: { type: "early", value: 1 } },
+      { id: 10, name: "Night Owl", description: "Focus after 10 PM", icon: "fas fa-moon", points: 30, requirement: { type: "late", value: 1 } }
+    ];
   }
   
-  async registerUser(username, email, password) {
-    if (this.users.find(u => u.email === email)) {
-      throw new Error('Email already registered');
-    }
-    
-    if (this.users.find(u => u.username === username)) {
-      throw new Error('Username already taken');
-    }
-    
-    const newUser = {
-      id: Date.now().toString(),
+  saveData() {
+    localStorage.setItem('focusArenaUser', JSON.stringify(this.user));
+    localStorage.setItem('focusArenaSessions', JSON.stringify(this.sessions));
+    localStorage.setItem('focusArenaHabits', JSON.stringify(this.habits));
+    localStorage.setItem('focusArenaTodos', JSON.stringify(this.todos));
+    localStorage.setItem('focusArenaNotes', JSON.stringify(this.notes));
+    localStorage.setItem('focusArenaAchievements', JSON.stringify(this.achievements));
+    localStorage.setItem('focusArenaSettings', JSON.stringify(this.settings));
+    localStorage.setItem('focusArenaCalendar', JSON.stringify(this.calendarData));
+  }
+  
+  // User methods
+  createUser(username, avatar, goal, theme) {
+    this.user = {
+      id: 'user_' + Date.now(),
       username,
-      email,
-      password: this.hashPassword(password),
+      avatar,
       level: 1,
       coins: 100,
+      xp: 0,
       totalFocusTime: 0,
       streak: 0,
-      avatar: this.generateAvatar(username),
-      friends: [],
-      ownedItems: [],
-      achievements: 0,
-      sessions: 0,
+      dailyGoal: goal,
+      theme,
+      achievements: [1],
+      ownedItems: [1],
       createdAt: new Date().toISOString(),
-      lastLogin: new Date().toISOString()
+      lastLogin: new Date().toISOString(),
+      dailyStreakDate: null
     };
     
-    this.users.push(newUser);
-    this.leaderboard.push({
-      userId: newUser.id,
-      username: newUser.username,
-      level: 1,
-      coins: 100,
-      totalFocusTime: 0,
-      streak: 0,
-      weeklyFocus: 0,
-      monthlyFocus: 0
+    // Create default habits
+    this.habits = [
+      { id: 1, name: "Morning Focus", description: "Start day with focused work", streak: 0, completedToday: false, createdAt: new Date().toISOString() },
+      { id: 2, name: "Daily Planning", description: "Plan your day ahead", streak: 0, completedToday: false, createdAt: new Date().toISOString() },
+      { id: 3, name: "Evening Review", description: "Review accomplishments", streak: 0, completedToday: false, createdAt: new Date().toISOString() }
+    ];
+    
+    this.saveData();
+    return this.user;
+  }
+  
+  updateUser(data) {
+    this.user = { ...this.user, ...data };
+    this.saveData();
+    return this.user;
+  }
+  
+  // Session methods
+  addSession(duration, type = 'focus') {
+    const session = {
+      id: Date.now(),
+      duration,
+      type,
+      timestamp: new Date().toISOString(),
+      coinsEarned: Math.floor(duration / 60) * 5,
+      xpEarned: Math.floor(duration / 60) * 10
+    };
+    
+    this.sessions.push(session);
+    
+    // Update user stats
+    this.user.totalFocusTime += duration;
+    this.user.coins += session.coinsEarned;
+    this.user.xp += session.xpEarned;
+    
+    // Check level up
+    const xpNeeded = this.user.level * 100;
+    if (this.user.xp >= xpNeeded) {
+      this.user.level++;
+      this.user.coins += 100;
+      showNotification(`🎉 Level Up! You're now level ${this.user.level}!`);
+    }
+    
+    // Update streak
+    const today = new Date().toDateString();
+    if (this.user.dailyStreakDate !== today) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      if (this.user.dailyStreakDate === yesterday.toDateString()) {
+        this.user.streak++;
+      } else {
+        this.user.streak = 1;
+      }
+      
+      this.user.dailyStreakDate = today;
+      this.user.coins += 50; // Daily bonus
+    }
+    
+    // Update calendar data
+    const dateKey = new Date().toISOString().split('T')[0];
+    if (!this.calendarData[dateKey]) {
+      this.calendarData[dateKey] = { sessions: 0, focusTime: 0 };
+    }
+    this.calendarData[dateKey].sessions++;
+    this.calendarData[dateKey].focusTime += duration;
+    
+    // Check achievements
+    this.checkAchievements();
+    
+    this.saveData();
+    return session;
+  }
+  
+  checkAchievements() {
+    const unlocked = [];
+    
+    this.achievements.forEach(achievement => {
+      if (this.user.achievements.includes(achievement.id)) return;
+      
+      let unlockedThis = false;
+      
+      switch(achievement.requirement.type) {
+        case 'sessions':
+          unlockedThis = this.sessions.length >= achievement.requirement.value;
+          break;
+        case 'time':
+          unlockedThis = this.user.totalFocusTime >= achievement.requirement.value;
+          break;
+        case 'streak':
+          unlockedThis = this.user.streak >= achievement.requirement.value;
+          break;
+        case 'tasks':
+          unlockedThis = this.todos.filter(t => t.completed).length >= achievement.requirement.value;
+          break;
+        case 'notes':
+          unlockedThis = this.notes.length >= achievement.requirement.value;
+          break;
+        case 'purchases':
+          unlockedThis = this.user.ownedItems.length >= achievement.requirement.value;
+          break;
+      }
+      
+      if (unlockedThis) {
+        this.user.achievements.push(achievement.id);
+        this.user.coins += achievement.points * 10;
+        unlocked.push(achievement);
+        
+        showNotification(`🏆 Achievement Unlocked: ${achievement.name}! +${achievement.points * 10} coins`);
+      }
     });
     
-    this.saveToLocalStorage();
-    return newUser;
+    return unlocked;
   }
   
-  async loginUser(email, password) {
-    const user = this.users.find(u => u.email === email && u.password === this.hashPassword(password));
+  // Habit methods
+  getHabits() {
+    return this.habits;
+  }
+  
+  updateHabit(id, completed) {
+    const habit = this.habits.find(h => h.id === id);
+    if (!habit) return null;
     
-    if (!user) {
-      throw new Error('Invalid email or password');
+    const today = new Date().toDateString();
+    
+    if (completed && !habit.completedToday) {
+      habit.completedToday = true;
+      habit.lastCompleted = today;
+      
+      if (this.isYesterday(habit.lastCompleted)) {
+        habit.streak++;
+      } else {
+        habit.streak = 1;
+      }
+      
+      // Award coins for habit completion
+      this.user.coins += 10;
+    } else if (!completed) {
+      habit.completedToday = false;
     }
     
-    user.lastLogin = new Date().toISOString();
-    this.saveToLocalStorage();
-    
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      level: user.level,
-      coins: user.coins,
-      totalFocusTime: user.totalFocusTime,
-      streak: user.streak,
-      avatar: user.avatar,
-      friends: user.friends,
-      ownedItems: user.ownedItems,
-      achievements: user.achievements,
-      sessions: user.sessions
+    this.saveData();
+    return habit;
+  }
+  
+  addHabit(name, description) {
+    const habit = {
+      id: Date.now(),
+      name,
+      description,
+      streak: 0,
+      completedToday: false,
+      createdAt: new Date().toISOString()
     };
+    
+    this.habits.push(habit);
+    this.saveData();
+    return habit;
   }
   
-  async purchaseItem(userId, itemId) {
-    const user = this.users.find(u => u.id === userId);
-    const item = this.marketItems.find(i => i.id === itemId);
+  isYesterday(dateString) {
+    if (!dateString) return false;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return dateString === yesterday.toDateString();
+  }
+  
+  // Todo methods
+  getTodos() {
+    return this.todos;
+  }
+  
+  addTodo(text, priority = 'medium') {
+    const todo = {
+      id: Date.now(),
+      text,
+      priority,
+      completed: false,
+      createdAt: new Date().toISOString()
+    };
     
-    if (!user || !item) {
-      throw new Error('Invalid user or item');
+    this.todos.push(todo);
+    this.saveData();
+    return todo;
+  }
+  
+  toggleTodo(id) {
+    const todo = this.todos.find(t => t.id === id);
+    if (todo) {
+      todo.completed = !todo.completed;
+      this.saveData();
     }
+    return todo;
+  }
+  
+  // Note methods
+  getNotes() {
+    return this.notes;
+  }
+  
+  addNote(title, content) {
+    const note = {
+      id: Date.now(),
+      title: title || 'Untitled Note',
+      content,
+      createdAt: new Date().toISOString()
+    };
     
-    if (user.coins < item.price) {
+    this.notes.push(note);
+    this.saveData();
+    return note;
+  }
+  
+  // Marketplace methods
+  purchaseItem(itemId) {
+    const item = this.marketItems.find(i => i.id === itemId);
+    if (!item) throw new Error('Item not found');
+    
+    if (this.user.coins < item.price) {
       throw new Error('Insufficient coins');
     }
     
-    if (user.ownedItems && user.ownedItems.includes(itemId)) {
+    if (this.user.ownedItems.includes(itemId)) {
       throw new Error('Item already owned');
     }
     
-    user.coins -= item.price;
-    user.ownedItems = [...(user.ownedItems || []), itemId];
+    this.user.coins -= item.price;
+    this.user.ownedItems.push(itemId);
     
-    const leaderboardEntry = this.leaderboard.find(l => l.userId === userId);
-    if (leaderboardEntry) {
-      leaderboardEntry.coins = user.coins;
+    // Apply item effect
+    if (item.type === 'theme') {
+      this.settings.theme = item.data.theme;
+      applyTheme(item.data.theme);
     }
     
-    this.saveToLocalStorage();
-    return { success: true, remainingCoins: user.coins };
+    this.saveData();
+    return { success: true, coins: this.user.coins };
   }
   
-  async updateUserStats(userId, stats) {
-    const user = this.users.find(u => u.id === userId);
-    const leaderboardEntry = this.leaderboard.find(l => l.userId === userId);
+  // Settings methods
+  updateSettings(newSettings) {
+    this.settings = { ...this.settings, ...newSettings };
+    this.saveData();
+    return this.settings;
+  }
+  
+  // Export/Import
+  exportAllData() {
+    return {
+      user: this.user,
+      sessions: this.sessions,
+      habits: this.habits,
+      todos: this.todos,
+      notes: this.notes,
+      achievements: this.achievements,
+      settings: this.settings,
+      calendarData: this.calendarData,
+      exportDate: new Date().toISOString(),
+      version: '1.0'
+    };
+  }
+  
+  importData(data) {
+    if (!data.user) throw new Error('Invalid data format');
     
-    if (user && leaderboardEntry) {
-      if (stats.coins !== undefined) user.coins += stats.coins;
-      if (stats.level !== undefined) user.level = stats.level;
-      if (stats.totalFocusTime !== undefined) user.totalFocusTime += stats.totalFocusTime;
-      if (stats.streak !== undefined) user.streak = stats.streak;
-      if (stats.sessions !== undefined) user.sessions += stats.sessions;
-      if (stats.achievements !== undefined) user.achievements += stats.achievements;
-      
-      if (stats.coins !== undefined) leaderboardEntry.coins = user.coins;
-      if (stats.level !== undefined) leaderboardEntry.level = user.level;
-      if (stats.totalFocusTime !== undefined) {
-        leaderboardEntry.totalFocusTime = user.totalFocusTime;
-        leaderboardEntry.weeklyFocus += Math.floor(stats.totalFocusTime / 60);
-        leaderboardEntry.monthlyFocus += Math.floor(stats.totalFocusTime / 60);
-      }
-      if (stats.streak !== undefined) leaderboardEntry.streak = user.streak;
-      
-      this.saveToLocalStorage();
-    }
-  }
-  
-  async getFriends(userId) {
-    const user = this.users.find(u => u.id === userId);
-    if (!user) return [];
+    this.user = data.user;
+    this.sessions = data.sessions || [];
+    this.habits = data.habits || [];
+    this.todos = data.todos || [];
+    this.notes = data.notes || [];
+    this.achievements = data.achievements || this.generateAchievements();
+    this.settings = data.settings || this.defaultSettings();
+    this.calendarData = data.calendarData || {};
     
-    return this.users
-      .filter(u => user.friends.includes(u.id))
-      .map(u => ({
-        id: u.id,
-        username: u.username,
-        level: u.level,
-        coins: u.coins,
-        totalFocusTime: u.totalFocusTime,
-        streak: u.streak,
-        avatar: u.avatar,
-        sessions: u.sessions,
-        achievements: u.achievements,
-        online: Math.random() > 0.3
-      }));
+    this.saveData();
+    return true;
   }
   
-  async getLeaderboard(type = 'weekly') {
-    const sorted = [...this.leaderboard].sort((a, b) => {
-      switch(type) {
-        case 'weekly': return b.weeklyFocus - a.weeklyFocus;
-        case 'monthly': return b.monthlyFocus - a.monthlyFocus;
-        case 'alltime': return b.totalFocusTime - a.totalFocusTime;
-        default: return b.totalFocusTime - a.totalFocusTime;
-      }
-    });
-    
-    return sorted.slice(0, 50);
-  }
-  
-  hashPassword(password) {
-    return 'hashed_' + password;
-  }
-  
-  generateAvatar(username) {
-    const avatars = ['👨‍💻', '👩‍💻', '🧑‍🎓', '👨‍🎓', '👩‍🎓', '🧙', '🦸', '🧚', '🧜', '🐱', '🐶', '🦊', '🐼'];
-    const hash = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return avatars[hash % avatars.length];
-  }
-  
-  saveToLocalStorage() {
-    localStorage.setItem('focusArenaUsers', JSON.stringify(this.users));
-    localStorage.setItem('focusArenaLeaderboard', JSON.stringify(this.leaderboard));
-    localStorage.setItem('focusArenaFriendships', JSON.stringify(this.friendships));
+  resetData() {
+    localStorage.clear();
+    this.loadData();
   }
 }
 
-// ===== INITIALIZE BACKEND =====
-const backend = new SimulatedBackend();
+// ===== INITIALIZE DATABASE =====
+const db = new OfflineDatabase();
 
-// ===== ORB FUNCTIONS =====
-function createOrbParticles() {
-  const orb = document.querySelector('.orb');
-  if (!orb) return;
+// ===== PROFILE SETUP =====
+function initProfileSetup() {
+  const avatarSelection = document.getElementById('avatarSelection');
+  avatarSelection.innerHTML = '';
   
-  const particlesContainer = document.createElement('div');
-  particlesContainer.className = 'orb-particles';
-  orb.appendChild(particlesContainer);
-  
-  // Create particles
-  for (let i = 0; i < 15; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'orb-particle';
-    
-    // Random position
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 100 + Math.random() * 80;
-    const tx = Math.cos(angle) * distance;
-    const ty = Math.sin(angle) * distance;
-    
-    particle.style.left = '50%';
-    particle.style.top = '50%';
-    particle.style.setProperty('--tx', `${tx}px`);
-    particle.style.setProperty('--ty', `${ty}px`);
-    
-    // Random color
-    const colors = ['#00D4FF', '#9D4EDD', '#FF6B6B', '#4CAF50', '#FF9800'];
-    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-    
-    // Random delay
-    particle.style.animationDelay = `${Math.random() * 2}s`;
-    
-    particlesContainer.appendChild(particle);
-  }
-}
-
-function toggleOrbPulse() {
-  orbPulse = !orbPulse;
-  const orb = document.querySelector('.orb');
-  
-  if (orbPulse) {
-    orb.style.animationPlayState = 'running';
-    showNotification('Orb pulse enabled! ✨');
-  } else {
-    orb.style.animationPlayState = 'paused';
-    showNotification('Orb pulse paused');
-  }
-}
-
-// ===== SMOOTH NAVIGATION =====
-let currentSection = 'play';
-let navTransitionInProgress = false;
-
-function showSection(sectionId, instant = false) {
-  if (navTransitionInProgress || currentSection === sectionId) return;
-  
-  navTransitionInProgress = true;
-  const oldSection = document.getElementById(currentSection);
-  const newSection = document.getElementById(sectionId);
-  const navButtons = document.querySelectorAll('.nav-btn');
-  
-  // Update navigation buttons
-  navButtons.forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.getAttribute('data-section') === sectionId) {
-      btn.classList.add('active');
-    }
+  // Display first 24 avatars for selection
+  avatars.slice(0, 24).forEach((avatar, index) => {
+    const avatarOption = document.createElement('div');
+    avatarOption.className = 'avatar-option';
+    if (index === 0) avatarOption.classList.add('selected');
+    avatarOption.textContent = avatar;
+    avatarOption.onclick = () => {
+      document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+      avatarOption.classList.add('selected');
+    };
+    avatarSelection.appendChild(avatarOption);
   });
   
-  if (instant) {
-    if (oldSection) oldSection.classList.remove('active');
-    if (newSection) newSection.classList.add('active');
-    currentSection = sectionId;
-    navTransitionInProgress = false;
+  // Handle profile form submission
+  document.getElementById('profileForm').onsubmit = (e) => {
+    e.preventDefault();
     
-    // Load content for the new section
-    loadSectionContent(sectionId);
-    return;
+    const username = document.getElementById('username').value;
+    const avatar = document.querySelector('.avatar-option.selected').textContent;
+    const focusGoal = parseInt(document.getElementById('focusGoal').value);
+    const theme = document.getElementById('productivityTheme').value;
+    
+    if (!username.trim()) {
+      showNotification('Please enter your name');
+      return;
+    }
+    
+    // Create user in database
+    currentUser = db.createUser(username, avatar, focusGoal, theme);
+    
+    // Show main app
+    document.getElementById('profileSetup').style.display = 'none';
+    document.getElementById('appContainer').classList.add('active');
+    
+    // Initialize app
+    initializeApp();
+    
+    showNotification(`Welcome to Focus Arena, ${username}! 🚀`);
+    triggerConfetti();
+  };
+}
+
+// ===== APP INITIALIZATION =====
+function initializeApp() {
+  if (!currentUser) {
+    currentUser = db.user;
   }
   
-  // Animate section transition
-  if (oldSection && newSection) {
-    oldSection.classList.remove('active');
-    oldSection.classList.add('section-exit');
-    
-    setTimeout(() => {
-      oldSection.classList.remove('section-exit');
-      newSection.classList.add('active');
-      currentSection = sectionId;
-      navTransitionInProgress = false;
-      
-      // Load content for the new section
-      loadSectionContent(sectionId);
-    }, 300);
-  }
+  // Update UI with user data
+  updateUserStats();
+  loadHabits();
+  loadTodos();
+  loadNotes();
+  renderMarketplace();
+  renderAchievements();
+  updateCalendar();
+  loadFocusMusic();
+  loadSettings();
+  
+  // Create orb particles
+  createOrbParticles();
+  
+  // Set default timer
+  setTimer(db.settings.defaultTimer || 25);
 }
 
-function loadSectionContent(sectionId) {
-  switch(sectionId) {
-    case 'marketplace':
-      renderMarketplace();
-      break;
-    case 'friends':
-      loadFriends();
-      break;
-    case 'stats':
-      updateUserStats();
-      break;
-    case 'leaderboard':
-      renderLeaderboard();
-      break;
-  }
-}
-
-// ===== TIMER & STOPWATCH FUNCTIONS =====
+// ===== TIMER FUNCTIONS =====
 function switchMode(mode) {
   timerMode = mode;
   
@@ -2374,19 +2988,17 @@ function switchMode(mode) {
   });
   event.target.classList.add('active');
   
-  if (mode === 'timer') {
-    document.getElementById('timerMode').style.display = 'block';
-    document.getElementById('stopwatchMode').style.display = 'none';
-    document.getElementById('lapBtn').style.display = 'none';
-    document.getElementById('startBtn').innerHTML = '<i class="fas fa-play"></i> START';
-    document.getElementById('startBtn').className = 'control-btn btn-start';
-  } else {
-    document.getElementById('timerMode').style.display = 'none';
-    document.getElementById('stopwatchMode').style.display = 'block';
-    document.getElementById('lapBtn').style.display = 'flex';
-    document.getElementById('startBtn').innerHTML = '<i class="fas fa-play"></i> START';
-    document.getElementById('startBtn').className = 'control-btn btn-stopwatch';
-  }
+  // Show/hide mode containers
+  document.getElementById('timerMode').style.display = mode === 'timer' ? 'block' : 'none';
+  document.getElementById('stopwatchMode').style.display = mode === 'stopwatch' ? 'block' : 'none';
+  document.getElementById('pomodoroMode').style.display = mode === 'pomodoro' ? 'block' : 'none';
+  document.getElementById('habitMode').style.display = mode === 'habit' ? 'block' : 'none';
+  
+  // Update button visibility
+  document.getElementById('lapBtn').style.display = mode === 'stopwatch' ? 'flex' : 'none';
+  document.getElementById('startBtn').style.display = mode !== 'habit' ? 'flex' : 'none';
+  document.getElementById('pauseBtn').style.display = mode !== 'habit' ? 'flex' : 'none';
+  document.getElementById('resetBtn').style.display = mode !== 'habit' ? 'flex' : 'none';
   
   resetTimer();
 }
@@ -2409,24 +3021,30 @@ function setTimer(minutes) {
 function startTimer() {
   if (timerMode === 'timer') {
     startFocusTimer();
-  } else {
+  } else if (timerMode === 'stopwatch') {
     startStopwatch();
+  } else if (timerMode === 'pomodoro') {
+    startPomodoro();
   }
 }
 
 function pauseTimer() {
   if (timerMode === 'timer') {
     pauseFocusTimer();
-  } else {
+  } else if (timerMode === 'stopwatch') {
     pauseStopwatch();
+  } else if (timerMode === 'pomodoro') {
+    pausePomodoro();
   }
 }
 
 function resetTimer() {
   if (timerMode === 'timer') {
     resetFocusTimer();
-  } else {
+  } else if (timerMode === 'stopwatch') {
     resetStopwatch();
+  } else if (timerMode === 'pomodoro') {
+    resetPomodoro();
   }
 }
 
@@ -2468,6 +3086,30 @@ function startFocusTimer() {
   showNotification('Focus timer started! Stay productive! ⏰');
 }
 
+function completeTimer() {
+  clearInterval(timerInterval);
+  currentTimer.running = false;
+  updateTimerButtons(false);
+  
+  // Calculate session duration
+  const duration = (currentTimer.hours * 3600) + (currentTimer.minutes * 60) + currentTimer.seconds;
+  
+  // Save session to database
+  const session = db.addSession(duration);
+  
+  // Update UI
+  updateUserStats();
+  updateCalendar();
+  
+  showNotification(`🎊 Session Complete! +${session.coinsEarned} coins | +${session.xpEarned} XP`);
+  triggerConfetti();
+  
+  // Play completion sound if enabled
+  if (db.settings.soundEffects) {
+    playCompletionSound();
+  }
+}
+
 function pauseFocusTimer() {
   if (!currentTimer.running) return;
   
@@ -2495,44 +3137,6 @@ function updateTimerDisplay() {
     document.getElementById('timerDisplay').textContent = 
       `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
-}
-
-function completeTimer() {
-  clearInterval(timerInterval);
-  currentTimer.running = false;
-  updateTimerButtons(false);
-  
-  // Award coins and XP
-  const minutesFocused = Math.floor(currentTimer.totalSeconds / 60);
-  const coinsEarned = minutesFocused * 5;
-  const xpEarned = minutesFocused * 10;
-  
-  if (currentUser) {
-    currentUser.coins += coinsEarned;
-    currentUser.totalFocusTime += minutesFocused * 60;
-    currentUser.sessions++;
-    
-    // Level up logic
-    const xpNeeded = currentUser.level * 100;
-    const currentXP = (currentUser.totalFocusTime / 60) * 2;
-    if (currentXP >= xpNeeded) {
-      currentUser.level++;
-      showNotification(`🎉 Level Up! You're now level ${currentUser.level}!`);
-    }
-    
-    // Update backend
-    backend.updateUserStats(currentUser.id, {
-      coins: coinsEarned,
-      totalFocusTime: minutesFocused * 60,
-      sessions: 1
-    });
-    
-    updateUserStats();
-    renderMarketplace();
-  }
-  
-  showNotification(`🎊 Session Complete! +${coinsEarned} coins | +${xpEarned} XP`);
-  triggerConfetti();
 }
 
 // Stopwatch Functions
@@ -2606,6 +3210,95 @@ function formatTime(seconds) {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
+// Pomodoro Functions
+function startPomodoro() {
+  if (pomodoroState.isRunning) return;
+  
+  pomodoroState.isRunning = true;
+  pomodoroState.focusTime = parseInt(document.getElementById('focusTime').value) * 60;
+  pomodoroState.breakTime = parseInt(document.getElementById('breakTime').value) * 60;
+  pomodoroState.totalSessions = parseInt(document.getElementById('pomodoroSessions').value);
+  
+  pomodoroState.currentTime = pomodoroState.isBreak ? pomodoroState.breakTime : pomodoroState.focusTime;
+  
+  updatePomodoroDisplay();
+  
+  pomodoroInterval = setInterval(() => {
+    pomodoroState.currentTime--;
+    
+    if (pomodoroState.currentTime <= 0) {
+      pomodoroState.isBreak = !pomodoroState.isBreak;
+      
+      if (!pomodoroState.isBreak) {
+        pomodoroState.sessions++;
+        if (pomodoroState.sessions >= pomodoroState.totalSessions) {
+          completePomodoro();
+          return;
+        }
+      }
+      
+      pomodoroState.currentTime = pomodoroState.isBreak ? pomodoroState.breakTime : pomodoroState.focusTime;
+      
+      showNotification(pomodoroState.isBreak ? 'Break time! ☕' : 'Focus time! 🎯');
+    }
+    
+    updatePomodoroDisplay();
+  }, 1000);
+  
+  updateTimerButtons(true);
+  showNotification(pomodoroState.isBreak ? 'Break started' : 'Pomodoro started! 🍅');
+}
+
+function pausePomodoro() {
+  if (!pomodoroState.isRunning) return;
+  
+  clearInterval(pomodoroInterval);
+  pomodoroState.isRunning = false;
+  updateTimerButtons(false);
+  showNotification('Pomodoro paused');
+}
+
+function resetPomodoro() {
+  clearInterval(pomodoroInterval);
+  pomodoroState = {
+    isRunning: false,
+    isBreak: false,
+    focusTime: 25 * 60,
+    breakTime: 5 * 60,
+    sessions: 0,
+    totalSessions: 4,
+    currentTime: 25 * 60
+  };
+  
+  updatePomodoroDisplay();
+  updateTimerButtons(false);
+  showNotification('Pomodoro reset');
+}
+
+function completePomodoro() {
+  clearInterval(pomodoroInterval);
+  pomodoroState.isRunning = false;
+  updateTimerButtons(false);
+  
+  // Save completed pomodoro sessions
+  const totalTime = pomodoroState.sessions * pomodoroState.focusTime;
+  const session = db.addSession(totalTime, 'pomodoro');
+  
+  updateUserStats();
+  
+  showNotification(`🎉 Pomodoro Complete! ${pomodoroState.sessions} sessions | +${session.coinsEarned} coins`);
+  triggerConfetti();
+}
+
+function updatePomodoroDisplay() {
+  const minutes = Math.floor(pomodoroState.currentTime / 60);
+  const seconds = pomodoroState.currentTime % 60;
+  document.getElementById('pomodoroDisplay').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  
+  document.getElementById('pomodoroPhase').innerHTML = 
+    `<i class="fas fa-clock"></i> ${pomodoroState.isBreak ? 'Break Time' : 'Focus Time'} (${pomodoroState.sessions + 1}/${pomodoroState.totalSessions})`;
+}
+
 function updateTimerButtons(running) {
   const startBtn = document.getElementById('startBtn');
   const pauseBtn = document.getElementById('pauseBtn');
@@ -2615,20 +3308,346 @@ function updateTimerButtons(running) {
     startBtn.disabled = true;
     pauseBtn.disabled = false;
     resetBtn.disabled = false;
-    startBtn.innerHTML = timerMode === 'timer' ? '<i class="fas fa-play"></i> RUNNING' : '<i class="fas fa-stopwatch"></i> RUNNING';
   } else {
     startBtn.disabled = false;
     pauseBtn.disabled = true;
     resetBtn.disabled = false;
-    startBtn.innerHTML = timerMode === 'timer' ? '<i class="fas fa-play"></i> START' : '<i class="fas fa-play"></i> START';
   }
 }
 
-// ===== MARKETPLACE FUNCTIONS =====
+// ===== HABIT TRACKER =====
+function loadHabits() {
+  const habitsList = document.getElementById('habitsList');
+  if (!habitsList) return;
+  
+  const habits = db.getHabits();
+  
+  if (habits.length === 0) {
+    habitsList.innerHTML = `
+      <div style="text-align: center; padding: 2rem;">
+        <div class="label-container">
+          <span class="label label-secondary">
+            <i class="fas fa-clipboard-list"></i> No habits yet
+          </span>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; color: rgba(255,255,255,0.5);">
+          Create your first habit to start tracking!
+        </p>
+      </div>
+    `;
+    return;
+  }
+  
+  habitsList.innerHTML = '';
+  
+  habits.forEach(habit => {
+    const habitElement = document.createElement('div');
+    habitElement.className = 'market-item';
+    habitElement.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <h4 style="margin-bottom: 0.5rem;">${habit.name}</h4>
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">${habit.description || 'No description'}</p>
+          <div class="label-container" style="margin-top: 0.5rem;">
+            <span class="label label-success">
+              <i class="fas fa-fire"></i> ${habit.streak} day streak
+            </span>
+          </div>
+        </div>
+        <button class="buy-btn ${habit.completedToday ? 'owned' : ''}" 
+                onclick="toggleHabit(${habit.id})"
+                style="min-width: 120px;">
+          ${habit.completedToday ? '✓ DONE' : 'MARK DONE'}
+        </button>
+      </div>
+    `;
+    
+    habitsList.appendChild(habitElement);
+  });
+}
+
+function toggleHabit(id) {
+  const habit = db.updateHabit(id, true);
+  
+  if (habit && habit.completedToday) {
+    showNotification(`Habit completed! +10 coins 🎉`);
+    updateUserStats();
+    loadHabits();
+    triggerConfetti();
+  }
+}
+
+function addNewHabit() {
+  const name = prompt('Enter habit name:');
+  if (!name) return;
+  
+  const description = prompt('Enter habit description (optional):') || '';
+  
+  db.addHabit(name, description);
+  showNotification('New habit added! 📝');
+  loadHabits();
+}
+
+// ===== TO-DO LIST =====
+function loadTodos() {
+  const todoList = document.getElementById('todoList');
+  if (!todoList) return;
+  
+  const todos = db.getTodos();
+  
+  todoList.innerHTML = '';
+  
+  if (todos.length === 0) {
+    todoList.innerHTML = `
+      <div style="text-align: center; padding: 2rem;">
+        <div class="label-container">
+          <span class="label label-secondary">
+            <i class="fas fa-tasks"></i> No tasks yet
+          </span>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; color: rgba(255,255,255,0.5);">
+          Add your first task to get started!
+        </p>
+      </div>
+    `;
+    updateTodoStats();
+    return;
+  }
+  
+  todos.forEach(todo => {
+    const todoElement = document.createElement('div');
+    todoElement.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+    todoElement.innerHTML = `
+      <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${todo.id})"></div>
+      <div class="todo-text">${todo.text}</div>
+      <div class="todo-priority priority-${todo.priority}">${todo.priority}</div>
+      <button class="buy-btn" onclick="deleteTodo(${todo.id})" style="padding: 0.3rem 0.6rem;">
+        <i class="fas fa-trash"></i>
+      </button>
+    `;
+    
+    todoList.appendChild(todoElement);
+  });
+  
+  updateTodoStats();
+}
+
+function addTodo() {
+  const input = document.getElementById('newTodo');
+  const priority = document.getElementById('todoPriority').value;
+  
+  if (!input.value.trim()) {
+    showNotification('Please enter a task');
+    return;
+  }
+  
+  db.addTodo(input.value, priority);
+  input.value = '';
+  
+  loadTodos();
+  showNotification('Task added! ✅');
+}
+
+function toggleTodo(id) {
+  db.toggleTodo(id);
+  loadTodos();
+}
+
+function deleteTodo(id) {
+  db.todos = db.todos.filter(t => t.id !== id);
+  db.saveData();
+  loadTodos();
+  showNotification('Task deleted');
+}
+
+function updateTodoStats() {
+  const todos = db.getTodos();
+  const total = todos.length;
+  const completed = todos.filter(t => t.completed).length;
+  const productivity = total > 0 ? Math.round((completed / total) * 100) : 0;
+  
+  document.getElementById('totalTasks').textContent = total;
+  document.getElementById('completedTasks').textContent = completed;
+  document.getElementById('productivityScore').textContent = `${productivity}%`;
+}
+
+// ===== NOTES =====
+function loadNotes() {
+  const notesContainer = document.getElementById('notesContainer');
+  if (!notesContainer) return;
+  
+  const notes = db.getNotes();
+  
+  notesContainer.innerHTML = '';
+  
+  if (notes.length === 0) {
+    notesContainer.innerHTML = `
+      <div style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
+        <div class="label-container">
+          <span class="label label-secondary">
+            <i class="fas fa-sticky-note"></i> No notes yet
+          </span>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; color: rgba(255,255,255,0.5);">
+          Create your first note!
+        </p>
+      </div>
+    `;
+    return;
+  }
+  
+  notes.slice(-6).reverse().forEach(note => {
+    const noteElement = document.createElement('div');
+    noteElement.className = 'note-card';
+    noteElement.innerHTML = `
+      <div class="note-title">${note.title}</div>
+      <div class="note-content">${note.content.length > 100 ? note.content.substring(0, 100) + '...' : note.content}</div>
+      <div class="note-date">${new Date(note.createdAt).toLocaleDateString()}</div>
+    `;
+    
+    notesContainer.appendChild(noteElement);
+  });
+}
+
+function saveQuickNote() {
+  const content = document.getElementById('quickNote').value;
+  
+  if (!content.trim()) {
+    showNotification('Please enter some content');
+    return;
+  }
+  
+  db.addNote('Quick Note', content);
+  document.getElementById('quickNote').value = '';
+  
+  loadNotes();
+  showNotification('Note saved! 📝');
+}
+
+function clearQuickNote() {
+  document.getElementById('quickNote').value = '';
+}
+
+// ===== CALENDAR =====
+function updateCalendar() {
+  const calendarDays = document.getElementById('calendarDays');
+  const currentMonth = document.getElementById('currentMonth');
+  
+  if (!calendarDays) return;
+  
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  
+  currentMonth.textContent = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  
+  // Get first day of month
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  
+  // Clear calendar
+  calendarDays.innerHTML = '';
+  
+  // Add day labels
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  days.forEach(day => {
+    const dayElement = document.createElement('div');
+    dayElement.className = 'calendar-day';
+    dayElement.textContent = day;
+    calendarDays.appendChild(dayElement);
+  });
+  
+  // Add empty cells for days before first day
+  for (let i = 0; i < firstDay.getDay(); i++) {
+    const emptyElement = document.createElement('div');
+    emptyElement.className = 'calendar-date';
+    calendarDays.appendChild(emptyElement);
+  }
+  
+  // Add days of month
+  for (let day = 1; day <= lastDay.getDate(); day++) {
+    const dateElement = document.createElement('div');
+    dateElement.className = 'calendar-date';
+    dateElement.textContent = day;
+    
+    const dateKey = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+    const hasSession = db.calendarData[dateKey];
+    
+    if (hasSession) {
+      dateElement.classList.add('has-session');
+    }
+    
+    // Check if today
+    const today = new Date();
+    if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+      dateElement.classList.add('active');
+    }
+    
+    dateElement.onclick = () => showDayDetails(dateKey, day);
+    calendarDays.appendChild(dateElement);
+  }
+}
+
+function prevMonth() {
+  currentDate.setMonth(currentDate.getMonth() - 1);
+  updateCalendar();
+}
+
+function nextMonth() {
+  currentDate.setMonth(currentDate.getMonth() + 1);
+  updateCalendar();
+}
+
+function showDayDetails(dateKey, day) {
+  const dayDetails = document.getElementById('dayDetails');
+  const selectedDate = document.getElementById('selectedDate');
+  const dayStats = document.getElementById('dayStats');
+  
+  const date = new Date(dateKey);
+  selectedDate.textContent = date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  
+  const data = db.calendarData[dateKey];
+  
+  if (data) {
+    const hours = Math.floor(data.focusTime / 3600);
+    const minutes = Math.floor((data.focusTime % 3600) / 60);
+    
+    dayStats.innerHTML = `
+      <div class="stats-grid" style="margin-top: 1rem;">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-clock"></i></div>
+          <div class="stat-value">${hours}h ${minutes}m</div>
+          <div class="stat-label">Focus Time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+          <div class="stat-value">${data.sessions}</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+      </div>
+    `;
+  } else {
+    dayStats.innerHTML = `
+      <div style="text-align: center; padding: 2rem;">
+        <div class="label-container">
+          <span class="label label-secondary">
+            <i class="fas fa-calendar-day"></i> No sessions
+          </span>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; color: rgba(255,255,255,0.5);">
+          No focus sessions recorded for this day
+        </p>
+      </div>
+    `;
+  }
+  
+  dayDetails.style.display = 'block';
+}
+
+// ===== MARKETPLACE =====
 function filterMarket(category) {
   const items = category === 'all' 
-    ? backend.marketItems 
-    : backend.marketItems.filter(item => item.category === category);
+    ? db.marketItems 
+    : db.marketItems.filter(item => item.category === category);
   
   renderMarketplaceItems(items);
   
@@ -2640,7 +3659,7 @@ function filterMarket(category) {
 }
 
 function renderMarketplace() {
-  renderMarketplaceItems(backend.marketItems);
+  renderMarketplaceItems(db.marketItems);
 }
 
 function renderMarketplaceItems(items) {
@@ -2666,7 +3685,7 @@ function renderMarketplaceItems(items) {
       
       <div class="item-stats">
         <span class="rarity ${item.rarity}">${item.rarity.toUpperCase()}</span>
-        <span><i class="fas fa-clock"></i> ${item.duration ? formatDuration(item.duration) : 'Permanent'}</span>
+        <span><i class="fas fa-coins"></i> ${item.price}</span>
       </div>
       
       <div class="item-price">
@@ -2683,22 +3702,11 @@ function renderMarketplaceItems(items) {
   });
 }
 
-function formatDuration(ms) {
-  const hours = Math.floor(ms / 3600000);
-  const minutes = Math.floor((ms % 3600000) / 60000);
-  
-  if (hours > 0) {
-    return `${hours}h ${minutes > 0 ? `${minutes}m` : ''}`;
-  }
-  return `${minutes}m`;
-}
-
 async function purchaseItem(itemId) {
   try {
-    const result = await backend.purchaseItem(currentUser.id, itemId);
+    const result = await db.purchaseItem(itemId);
     
-    currentUser.coins = result.remainingCoins;
-    currentUser.ownedItems = [...(currentUser.ownedItems || []), itemId];
+    currentUser.coins = result.coins;
     
     updateUserStats();
     renderMarketplace();
@@ -2710,199 +3718,87 @@ async function purchaseItem(itemId) {
   }
 }
 
-// ===== FRIENDS FUNCTIONS =====
-function showFriendsTab(tab) {
-  document.querySelectorAll('.friend-tab').forEach(t => {
-    t.classList.remove('active');
-  });
-  event.target.classList.add('active');
-  
-  loadFriends(tab);
-}
-
-async function loadFriends(tab = 'all') {
-  const grid = document.getElementById('friendsGrid');
+// ===== ACHIEVEMENTS =====
+function renderAchievements() {
+  const grid = document.getElementById('achievementsGrid');
   if (!grid) return;
-  
-  let friends = await backend.getFriends(currentUser.id);
-  
-  if (tab === 'online') {
-    friends = friends.filter(f => f.online);
-  }
   
   grid.innerHTML = '';
   
-  if (friends.length === 0) {
-    grid.innerHTML = `
-      <div style="text-align: center; padding: 3rem;">
-        <div class="label-container">
-          <span class="label label-secondary">
-            <i class="fas fa-users"></i> No friends yet
+  db.achievements.forEach((achievement, index) => {
+    const isUnlocked = currentUser.achievements.includes(achievement.id);
+    
+    const achievementEl = document.createElement('div');
+    achievementEl.className = `achievement-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+    achievementEl.style.animationDelay = `${index * 0.1}s`;
+    achievementEl.innerHTML = `
+      <div class="achievement-icon">
+        <i class="${achievement.icon}"></i>
+      </div>
+      <h3 style="margin-bottom: 0.5rem; color: ${isUnlocked ? 'var(--primary)' : 'rgba(255,255,255,0.7)'};">${achievement.name}</h3>
+      <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem; font-size: 0.9rem;">${achievement.description}</p>
+      
+      <div class="achievement-progress">
+        <div class="progress-text">
+          <span>${isUnlocked ? 'UNLOCKED' : 'LOCKED'}</span>
+          <span>${achievement.points} pts</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: ${isUnlocked ? '100%' : '0%'}"></div>
+        </div>
+      </div>
+      
+      ${isUnlocked ? `
+        <div class="label-container" style="margin-top: 1rem;">
+          <span class="label label-success">
+            <i class="fas fa-unlock"></i> Unlocked
           </span>
         </div>
-        <p style="text-align: center; margin-top: 1rem; color: rgba(255,255,255,0.5);">
-          Search for friends to connect with!
-        </p>
-      </div>
-    `;
-    return;
-  }
-  
-  friends.forEach((friend, index) => {
-    const friendEl = document.createElement('div');
-    friendEl.className = `friend-card ${friend.online ? 'online' : 'offline'}`;
-    friendEl.style.animationDelay = `${index * 0.1}s`;
-    friendEl.innerHTML = `
-      <div class="friend-status ${friend.online ? 'online' : 'offline'}"></div>
-      
-      <div class="friend-header">
-        <div class="friend-avatar">${friend.avatar}</div>
-        <div class="friend-info">
-          <div class="friend-name">${friend.username}</div>
-          <div class="friend-level">
-            <span class="label-container">
-              <span class="label label-primary">
-                <i class="fas fa-trophy"></i> Level ${friend.level}
-              </span>
-            </span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="friend-stats">
-        <div class="friend-stat">
-          <div class="stat-value-sm">${Math.floor(friend.totalFocusTime / 60)}h</div>
-          <div class="stat-label-sm">Focus Time</div>
-        </div>
-        <div class="friend-stat">
-          <div class="stat-value-sm">${friend.streak}</div>
-          <div class="stat-label-sm">Day Streak</div>
-        </div>
-        <div class="friend-stat">
-          <div class="stat-value-sm">${friend.coins}</div>
-          <div class="stat-label-sm">Coins</div>
-        </div>
-        <div class="friend-stat">
-          <div class="stat-value-sm">${friend.sessions}</div>
-          <div class="stat-label-sm">Sessions</div>
-        </div>
-      </div>
-      
-      <div class="friend-actions">
-        <button class="action-btn challenge" onclick="challengeFriend('${friend.id}')">
-          <i class="fas fa-bullseye"></i> Challenge
-        </button>
-        <button class="action-btn message" onclick="messageFriend('${friend.id}')">
-          <i class="fas fa-comment"></i> Message
-        </button>
-      </div>
+      ` : ''}
     `;
     
-    grid.appendChild(friendEl);
+    grid.appendChild(achievementEl);
   });
 }
 
-function searchFriends() {
-  const query = document.getElementById('friendSearch').value;
-  if (!query.trim()) {
-    showNotification('Please enter a search term');
-    return;
-  }
-  
-  showNotification(`Searching for: ${query}`);
-}
-
-function challengeFriend(friendId) {
-  showNotification('Challenge sent to friend! 🎯');
-}
-
-function messageFriend(friendId) {
-  showNotification('Opening chat with friend... 💬');
-}
-
-// ===== LEADERBOARD FUNCTIONS =====
-async function showLeaderboard(type) {
-  document.querySelectorAll('.friend-tab').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  event.target.classList.add('active');
-  
-  await renderLeaderboard(type);
-}
-
-async function renderLeaderboard(type = 'weekly') {
-  const content = document.getElementById('leaderboardContent');
-  if (!content) return;
-  
-  const leaderboard = await backend.getLeaderboard(type);
-  
-  let html = `
-    <div style="background: rgba(255,255,255,0.05); border-radius: ${type === 'weekly' ? 'var(--radius)' : 'var(--radius-sm)'}; padding: 1.5rem; margin-top: 1rem;">
-      <h3 style="margin-bottom: 1rem; color: rgba(255,255,255,0.9);">${type.charAt(0).toUpperCase() + type.slice(1)} Leaderboard</h3>
-  `;
-  
-  leaderboard.forEach((user, index) => {
-    const isCurrentUser = currentUser && user.userId === currentUser.id;
-    const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
-    
-    html += `
-      <div style="display: flex; align-items: center; padding: 1rem; background: ${isCurrentUser ? 'rgba(0,212,255,0.1)' : 'transparent'}; border-radius: var(--radius-sm); margin-bottom: 0.5rem;">
-        <div style="font-size: 1.5rem; font-weight: 800; margin-right: 1rem; width: 40px; text-align: center; ${rankClass ? `color: ${rankClass === 'rank-1' ? '#FFD700' : rankClass === 'rank-2' ? '#C0C0C0' : '#CD7F32'}` : ''}">
-          ${index + 1}
-        </div>
-        <div style="flex: 1;">
-          <div style="font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-            ${backend.generateAvatar(user.username)} ${user.username}
-            ${isCurrentUser ? '<span class="label label-primary" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;">YOU</span>' : ''}
-          </div>
-          <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">
-            Level ${user.level} • ${type === 'weekly' ? `${Math.floor(user.weeklyFocus/60)}h` : type === 'monthly' ? `${Math.floor(user.monthlyFocus/60)}h` : `${Math.floor(user.totalFocusTime/60)}h`} • ${user.streak} day streak
-          </div>
-        </div>
-        <div style="font-weight: 700; color: var(--primary);">
-          ${user.coins} <i class="fas fa-coins"></i>
-        </div>
-      </div>
-    `;
-  });
-  
-  html += '</div>';
-  content.innerHTML = html;
-}
-
-// ===== STATISTICS FUNCTIONS =====
+// ===== STATISTICS =====
 function updateUserStats() {
   if (!currentUser) return;
   
-  // Update header labels
+  // Update header
   document.getElementById('coins').textContent = currentUser.coins;
   document.getElementById('lvl').textContent = currentUser.level;
-  document.getElementById('username').textContent = currentUser.username;
+  document.getElementById('headerUsername').textContent = currentUser.username;
   
-  // Calculate XP percentage for next level
+  // Calculate XP percentage
   const xpNeeded = currentUser.level * 100;
-  const currentXP = (currentUser.totalFocusTime / 60) * 2;
-  const xpPercent = Math.min(100, (currentXP / xpNeeded) * 100);
+  const xpPercent = Math.min(100, (currentUser.xp / xpNeeded) * 100);
   document.getElementById('xpBadge').textContent = `${Math.round(xpPercent)}%`;
   
   // Update stats section
+  const hours = Math.floor(currentUser.totalFocusTime / 3600);
+  const minutes = Math.floor((currentUser.totalFocusTime % 3600) / 60);
+  
   document.getElementById('totalCoins').textContent = currentUser.coins;
   document.getElementById('currentStreak').textContent = currentUser.streak;
-  document.getElementById('totalFocusTime').textContent = `${Math.floor(currentUser.totalFocusTime / 60)}h`;
-  document.getElementById('activeDays').textContent = Math.floor(currentUser.totalFocusTime / (60 * 25));
-  document.getElementById('completedSessions').textContent = currentUser.sessions;
-  document.getElementById('achievements').textContent = currentUser.achievements;
+  document.getElementById('totalFocusTime').textContent = `${hours}h`;
+  document.getElementById('activeDays').textContent = Object.keys(db.calendarData).length;
+  document.getElementById('completedSessions').textContent = db.sessions.length;
+  document.getElementById('achievementsCount').textContent = currentUser.achievements.length;
   
   // Update progress bars
   document.getElementById('coinsProgress').style.width = `${Math.min(100, currentUser.coins / 5000 * 100)}%`;
   document.getElementById('streakProgress').style.width = `${Math.min(100, currentUser.streak / 100 * 100)}%`;
-  document.getElementById('timeProgress').style.width = `${Math.min(100, currentUser.totalFocusTime / (60 * 100) * 100)}%`;
-  document.getElementById('daysProgress').style.width = `${Math.min(100, Math.floor(currentUser.totalFocusTime / (60 * 25)) / 365 * 100)}%`;
-  document.getElementById('sessionsProgress').style.width = `${Math.min(100, currentUser.sessions / 500 * 100)}%`;
-  document.getElementById('achievementsProgress').style.width = `${Math.min(100, currentUser.achievements / 50 * 100)}%`;
+  document.getElementById('timeProgress').style.width = `${Math.min(100, currentUser.totalFocusTime / 360000 * 100)}%`;
+  document.getElementById('daysProgress').style.width = `${Math.min(100, Object.keys(db.calendarData).length / 365 * 100)}%`;
+  document.getElementById('sessionsProgress').style.width = `${Math.min(100, db.sessions.length / 500 * 100)}%`;
+  document.getElementById('achievementsProgress').style.width = `${Math.min(100, currentUser.achievements.length / 10 * 100)}%`;
   
-  // Update chart
+  // Update weekly chart
   updateWeeklyChart();
+  
+  // Update water tracker
+  updateWaterTracker();
 }
 
 function updateWeeklyChart() {
@@ -2910,16 +3806,30 @@ function updateWeeklyChart() {
   if (!chart) return;
   
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const today = new Date();
+  const weekData = [];
+  
+  // Get data for last 7 days
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    const dateKey = date.toISOString().split('T')[0];
+    const data = db.calendarData[dateKey];
+    weekData.push(data ? Math.floor(data.focusTime / 60) : 0);
+  }
+  
+  const maxTime = Math.max(...weekData, 60); // At least 60 minutes for scale
+  
   chart.innerHTML = '';
   
-  days.forEach(day => {
-    const value = Math.floor(Math.random() * 120) + 30;
-    const percent = (value / 150) * 100;
+  days.forEach((day, index) => {
+    const minutes = weekData[index] || 0;
+    const percent = Math.min(100, (minutes / maxTime) * 100);
     
     const bar = document.createElement('div');
     bar.className = 'chart-bar';
     bar.style.height = `${percent}%`;
-    bar.setAttribute('data-value', `${value} min`);
+    bar.setAttribute('data-value', `${minutes} min`);
     
     const dayLabel = document.createElement('div');
     dayLabel.textContent = day;
@@ -2933,122 +3843,417 @@ function updateWeeklyChart() {
   });
 }
 
-// ===== AUTHENTICATION FUNCTIONS =====
-function showLogin() {
-  document.getElementById('loginPage').style.display = 'block';
-  document.getElementById('signupPage').style.display = 'none';
-  clearAuthErrors();
-}
-
-function showSignup() {
-  document.getElementById('loginPage').style.display = 'none';
-  document.getElementById('signupPage').style.display = 'block';
-  clearAuthErrors();
-}
-
-function togglePassword(inputId) {
-  const input = document.getElementById(inputId);
-  const toggle = input.nextElementSibling.querySelector('i');
+function updateWaterTracker() {
+  const waterGlasses = document.getElementById('waterGlasses');
+  if (!waterGlasses) return;
   
-  if (input.type === 'password') {
-    input.type = 'text';
-    toggle.className = 'fas fa-eye-slash';
-  } else {
-    input.type = 'password';
-    toggle.className = 'fas fa-eye';
-  }
-}
-
-function clearAuthErrors() {
-  document.getElementById('authError').className = 'auth-error';
-  document.getElementById('signupError').className = 'auth-error';
-}
-
-async function handleLogin(event) {
-  event.preventDefault();
-  
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  
-  try {
-    const user = await backend.loginUser(email, password);
-    currentUser = user;
-    showApp();
-    showNotification(`Welcome back, ${user.username}! Ready to focus? 🚀`);
-  } catch (error) {
-    showNotification(error.message);
-  }
-}
-
-async function handleSignup(event) {
-  event.preventDefault();
-  
-  const username = document.getElementById('signupUsername').value;
-  const email = document.getElementById('signupEmail').value;
-  const password = document.getElementById('signupPassword').value;
-  const confirmPassword = document.getElementById('confirmPassword').value;
-  
-  if (password !== confirmPassword) {
-    showNotification('Passwords do not match');
-    return;
-  }
-  
-  if (password.length < 6) {
-    showNotification('Password must be at least 6 characters');
-    return;
-  }
-  
-  try {
-    const user = await backend.registerUser(username, email, password);
-    currentUser = user;
-    showApp();
-    showNotification(`Welcome to Focus Arena, ${username}! You received 100 bonus coins! 🎁`);
-    triggerConfetti();
-  } catch (error) {
-    showNotification(error.message);
-  }
-}
-
-function showApp() {
-  document.getElementById('authContainer').style.display = 'none';
-  document.getElementById('appContainer').classList.add('active');
-  
-  updateUserStats();
-  renderMarketplace();
-  loadFriends();
-  createOrbParticles();
-  
-  checkDailyLogin();
-}
-
-function logout() {
-  currentUser = null;
-  document.getElementById('appContainer').classList.remove('active');
-  document.getElementById('authContainer').style.display = 'flex';
-  document.getElementById('loginPage').style.display = 'block';
-  document.getElementById('signupPage').style.display = 'none';
-  showNotification('Logged out successfully');
-}
-
-function checkDailyLogin() {
   const today = new Date().toDateString();
-  const lastLogin = localStorage.getItem(`focusArenaLastLogin_${currentUser.id}`);
+  const waterData = JSON.parse(localStorage.getItem('focusArenaWater') || '{}');
+  const todayGlasses = waterData[today] || 0;
   
-  if (lastLogin !== today) {
-    currentUser.coins += 50;
-    currentUser.streak++;
+  waterGlasses.innerHTML = '';
+  
+  for (let i = 0; i < 8; i++) {
+    const glass = document.createElement('div');
+    glass.className = `water-glass ${i < todayGlasses ? 'filled' : ''}`;
+    glass.onclick = () => toggleWaterGlass(i);
+    waterGlasses.appendChild(glass);
+  }
+}
+
+function toggleWaterGlass(index) {
+  const today = new Date().toDateString();
+  const waterData = JSON.parse(localStorage.getItem('focusArenaWater') || '{}');
+  const todayGlasses = waterData[today] || 0;
+  
+  if (index === todayGlasses - 1) {
+    // Remove glass
+    waterData[today] = Math.max(0, todayGlasses - 1);
+  } else if (index === todayGlasses) {
+    // Add glass
+    waterData[today] = Math.min(8, todayGlasses + 1);
     
-    backend.updateUserStats(currentUser.id, {
-      coins: 50,
-      streak: currentUser.streak
-    });
+    // Award coins for staying hydrated
+    if (waterData[today] === 8) {
+      db.user.coins += 20;
+      db.saveData();
+      updateUserStats();
+      showNotification('🎉 Hydration goal reached! +20 coins');
+    }
+  }
+  
+  localStorage.setItem('focusArenaWater', JSON.stringify(waterData));
+  updateWaterTracker();
+}
+
+function resetWaterTracker() {
+  const today = new Date().toDateString();
+  const waterData = JSON.parse(localStorage.getItem('focusArenaWater') || '{}');
+  waterData[today] = 0;
+  localStorage.setItem('focusArenaWater', JSON.stringify(waterData));
+  updateWaterTracker();
+  showNotification('Water tracker reset');
+}
+
+function setMood(mood) {
+  selectedMood = mood;
+  
+  // Update UI
+  document.querySelectorAll('.mood-option').forEach(opt => {
+    opt.classList.remove('selected');
+  });
+  event.target.closest('.mood-option').classList.add('selected');
+  
+  // Save mood
+  const today = new Date().toDateString();
+  const moodData = JSON.parse(localStorage.getItem('focusArenaMoods') || '{}');
+  moodData[today] = mood;
+  localStorage.setItem('focusArenaMoods', JSON.stringify(moodData));
+  
+  showNotification(`Mood set: ${mood}`);
+}
+
+// ===== FOCUS MUSIC =====
+function loadFocusMusic() {
+  const musicGrid = document.getElementById('focusMusicGrid');
+  if (!musicGrid) return;
+  
+  const musicTracks = [
+    { id: 1, name: "Rain Sounds", icon: "fas fa-cloud-rain", color: "#2196F3" },
+    { id: 2, name: "Forest Ambience", icon: "fas fa-tree", color: "#4CAF50" },
+    { id: 3, name: "White Noise", icon: "fas fa-volume-up", color: "#9C27B0" },
+    { id: 4, name: "Ocean Waves", icon: "fas fa-water", color: "#00BCD4" },
+    { id: 5, name: "Coffee Shop", icon: "fas fa-coffee", color: "#795548" },
+    { id: 6, name: "Classical", icon: "fas fa-music", color: "#FF9800" }
+  ];
+  
+  musicGrid.innerHTML = '';
+  
+  musicTracks.forEach(track => {
+    const trackElement = document.createElement('div');
+    trackElement.className = 'music-track';
+    trackElement.innerHTML = `
+      <div style="font-size: 2rem; margin-bottom: 0.5rem; color: ${track.color};">
+        <i class="${track.icon}"></i>
+      </div>
+      <div>${track.name}</div>
+    `;
     
-    updateUserStats();
+    trackElement.onclick = () => playFocusMusic(track.id);
+    musicGrid.appendChild(trackElement);
+  });
+}
+
+function playFocusMusic(trackId) {
+  // In a real app, this would play actual music
+  // For this demo, we'll just show a notification
+  
+  const tracks = {
+    1: "Rain Sounds",
+    2: "Forest Ambience",
+    3: "White Noise",
+    4: "Ocean Waves",
+    5: "Coffee Shop",
+    6: "Classical Music"
+  };
+  
+  showNotification(`Now playing: ${tracks[trackId]} 🎵`);
+  
+  // Update UI
+  document.querySelectorAll('.music-track').forEach(track => {
+    track.classList.remove('playing');
+  });
+  event.target.closest('.music-track').classList.add('playing');
+}
+
+// ===== SETTINGS =====
+function loadSettings() {
+  // Load current settings
+  document.getElementById('soundEffects').checked = db.settings.soundEffects;
+  document.getElementById('notifications').checked = db.settings.notifications;
+  document.getElementById('focusReminders').checked = db.settings.focusReminders;
+  document.getElementById('autoSave').checked = db.settings.autoSave;
+  document.getElementById('defaultTimer').value = db.settings.defaultTimer;
+  document.getElementById('autoBreak').checked = db.settings.autoBreak;
+  document.getElementById('endSound').value = db.settings.endSound;
+  
+  // Add event listeners
+  document.getElementById('soundEffects').onchange = saveSettings;
+  document.getElementById('notifications').onchange = saveSettings;
+  document.getElementById('focusReminders').onchange = saveSettings;
+  document.getElementById('autoSave').onchange = saveSettings;
+  document.getElementById('defaultTimer').onchange = saveSettings;
+  document.getElementById('autoBreak').onchange = saveSettings;
+  document.getElementById('endSound').onchange = saveSettings;
+}
+
+function saveSettings() {
+  const settings = {
+    soundEffects: document.getElementById('soundEffects').checked,
+    notifications: document.getElementById('notifications').checked,
+    focusReminders: document.getElementById('focusReminders').checked,
+    autoSave: document.getElementById('autoSave').checked,
+    defaultTimer: parseInt(document.getElementById('defaultTimer').value) || 25,
+    autoBreak: document.getElementById('autoBreak').checked,
+    endSound: document.getElementById('endSound').value
+  };
+  
+  db.updateSettings(settings);
+  showNotification('Settings saved! ⚙️');
+}
+
+function changeTheme(theme) {
+  // Remove all theme classes
+  document.body.classList.remove('theme-dark', 'theme-light', 'theme-ocean', 'theme-forest', 'theme-sunset');
+  
+  // Add new theme class
+  document.body.classList.add(`theme-${theme}`);
+  
+  // Save to settings
+  db.settings.theme = theme;
+  db.saveData();
+  
+  showNotification(`Theme changed to ${theme} 🎨`);
+}
+
+function exportAllData() {
+  const data = db.exportAllData();
+  const dataStr = JSON.stringify(data, null, 2);
+  const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+  
+  const exportFileDefaultName = `focus-arena-backup-${new Date().toISOString().split('T')[0]}.json`;
+  
+  const linkElement = document.createElement('a');
+  linkElement.setAttribute('href', dataUri);
+  linkElement.setAttribute('download', exportFileDefaultName);
+  linkElement.click();
+  
+  showNotification('All data exported successfully! 📥');
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
     
-    showNotification(`🎁 Daily Login Bonus! +50 coins | Streak: ${currentUser.streak} days`);
-    triggerConfetti();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target.result);
+        db.importData(data);
+        
+        // Reload app
+        currentUser = db.user;
+        initializeApp();
+        
+        showNotification('Data imported successfully! 📤');
+        triggerConfetti();
+      } catch (error) {
+        showNotification('Error importing data: ' + error.message);
+      }
+    };
     
-    localStorage.setItem(`focusArenaLastLogin_${currentUser.id}`, today);
+    reader.readAsText(file);
+  };
+  
+  input.click();
+}
+
+function resetAppData() {
+  if (confirm('Are you sure you want to reset all data? This cannot be undone!')) {
+    db.resetData();
+    currentUser = db.user;
+    initializeApp();
+    showNotification('All data reset! 🔄');
+  }
+}
+
+// ===== PROFILE MODAL =====
+function showProfileModal() {
+  const modal = document.getElementById('profileModal');
+  const avatarSelection = document.getElementById('modalAvatarSelection');
+  const modalAvatar = document.getElementById('modalAvatar');
+  const modalUsername = document.getElementById('modalUsername');
+  const modalLevel = document.getElementById('modalLevel');
+  const editUsername = document.getElementById('editUsername');
+  
+  // Set current values
+  modalAvatar.textContent = currentUser.avatar;
+  modalUsername.textContent = currentUser.username;
+  modalLevel.textContent = `Level ${currentUser.level} • ${currentUser.xp} XP`;
+  editUsername.value = currentUser.username;
+  
+  // Populate avatar selection
+  avatarSelection.innerHTML = '';
+  avatars.slice(0, 12).forEach(avatar => {
+    const avatarOption = document.createElement('div');
+    avatarOption.className = 'avatar-option';
+    if (avatar === currentUser.avatar) avatarOption.classList.add('selected');
+    avatarOption.textContent = avatar;
+    avatarOption.onclick = () => {
+      document.querySelectorAll('#modalAvatarSelection .avatar-option').forEach(opt => opt.classList.remove('selected'));
+      avatarOption.classList.add('selected');
+      modalAvatar.textContent = avatar;
+    };
+    avatarSelection.appendChild(avatarOption);
+  });
+  
+  modal.style.display = 'flex';
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+}
+
+function updateProfile() {
+  const newUsername = document.getElementById('editUsername').value.trim();
+  const newAvatar = document.querySelector('#modalAvatarSelection .avatar-option.selected').textContent;
+  
+  if (!newUsername) {
+    showNotification('Please enter a name');
+    return;
+  }
+  
+  db.updateUser({
+    username: newUsername,
+    avatar: newAvatar
+  });
+  
+  currentUser = db.user;
+  updateUserStats();
+  
+  closeModal('profileModal');
+  showNotification('Profile updated! ✅');
+}
+
+// ===== ORB FUNCTIONS =====
+function createOrbParticles() {
+  const orb = document.querySelector('.orb');
+  if (!orb) return;
+  
+  const particlesContainer = document.createElement('div');
+  particlesContainer.className = 'orb-particles';
+  orb.appendChild(particlesContainer);
+  
+  // Create particles
+  for (let i = 0; i < 15; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'orb-particle';
+    
+    // Random position
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 100 + Math.random() * 80;
+    const tx = Math.cos(angle) * distance;
+    const ty = Math.sin(angle) * distance;
+    
+    particle.style.left = '50%';
+    particle.style.top = '50%';
+    particle.style.setProperty('--tx', `${tx}px`);
+    particle.style.setProperty('--ty', `${ty}px`);
+    
+    // Random color
+    const colors = ['#00D4FF', '#9D4EDD', '#FF6B6B', '#4CAF50', '#FF9800'];
+    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+    
+    // Random delay
+    particle.style.animationDelay = `${Math.random() * 2}s`;
+    
+    particlesContainer.appendChild(particle);
+  }
+}
+
+function toggleOrbPulse() {
+  orbPulse = !orbPulse;
+  const orb = document.querySelector('.orb');
+  
+  if (orbPulse) {
+    orb.style.animationPlayState = 'running';
+    showNotification('Orb pulse enabled! ✨');
+  } else {
+    orb.style.animationPlayState = 'paused';
+    showNotification('Orb pulse paused');
+  }
+}
+
+// ===== NAVIGATION =====
+let currentSection = 'play';
+let navTransitionInProgress = false;
+
+function showSection(sectionId, instant = false) {
+  if (navTransitionInProgress || currentSection === sectionId) return;
+  
+  navTransitionInProgress = true;
+  const oldSection = document.getElementById(currentSection);
+  const newSection = document.getElementById(sectionId);
+  const navButtons = document.querySelectorAll('.nav-btn');
+  
+  // Update navigation buttons
+  navButtons.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-section') === sectionId) {
+      btn.classList.add('active');
+    }
+  });
+  
+  if (instant) {
+    if (oldSection) oldSection.classList.remove('active');
+    if (newSection) newSection.classList.add('active');
+    currentSection = sectionId;
+    navTransitionInProgress = false;
+    
+    // Load content for the new section
+    loadSectionContent(sectionId);
+    return;
+  }
+  
+  // Animate section transition
+  if (oldSection && newSection) {
+    oldSection.classList.remove('active');
+    oldSection.classList.add('section-exit');
+    
+    setTimeout(() => {
+      oldSection.classList.remove('section-exit');
+      newSection.classList.add('active');
+      currentSection = sectionId;
+      navTransitionInProgress = false;
+      
+      // Load content for the new section
+      loadSectionContent(sectionId);
+    }, 300);
+  }
+}
+
+function loadSectionContent(sectionId) {
+  switch(sectionId) {
+    case 'play':
+      updateTimerDisplay();
+      loadHabits();
+      loadFocusMusic();
+      break;
+    case 'calendar':
+      updateCalendar();
+      break;
+    case 'todo':
+      loadTodos();
+      break;
+    case 'notes':
+      loadNotes();
+      break;
+    case 'marketplace':
+      renderMarketplace();
+      break;
+    case 'stats':
+      updateUserStats();
+      break;
+    case 'achievements':
+      renderAchievements();
+      break;
+    case 'settings':
+      loadSettings();
+      break;
   }
 }
 
@@ -3101,46 +4306,95 @@ function triggerConfetti() {
   }
 }
 
+function playCompletionSound() {
+  // Create a simple completion sound
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+  oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+  oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+  
+  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.5);
+}
+
+// ===== OFFLINE DETECTION =====
+function updateOnlineStatus() {
+  if (!navigator.onLine) {
+    showNotification('You are offline. All data is saved locally.');
+  }
+}
+
 // ===== INITIALIZATION =====
 window.addEventListener('DOMContentLoaded', () => {
-  const savedUser = localStorage.getItem('focusArenaCurrentUser');
-  if (savedUser) {
-    try {
-      currentUser = JSON.parse(savedUser);
-      showApp();
-    } catch (error) {
-      showLogin();
-    }
+  // Check if user exists
+  if (db.user) {
+    currentUser = db.user;
+    document.getElementById('profileSetup').style.display = 'none';
+    document.getElementById('appContainer').classList.add('active');
+    initializeApp();
   } else {
-    showLogin();
+    initProfileSetup();
   }
   
-  // Setup form handlers
-  document.getElementById('loginForm').addEventListener('submit', handleLogin);
-  document.getElementById('signupForm').addEventListener('submit', handleSignup);
+  // Set up offline detection
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  updateOnlineStatus();
   
-  // Auto-save user data
+  // Auto-save every 30 seconds
   setInterval(() => {
-    if (currentUser) {
-      localStorage.setItem('focusArenaCurrentUser', JSON.stringify(currentUser));
+    if (currentUser && db.settings.autoSave) {
+      db.saveData();
     }
-  }, 10000);
+  }, 30000);
   
-  // Show motivational quotes
+  // Motivational quotes
   const quotes = [
     "Your future is created by what you do today! 🚀",
     "Every minute of focus brings you closer to your goals! ⏰",
     "Great things never come from comfort zones! 💪",
     "The secret of getting ahead is getting started! ✨",
-    "Don't watch the clock; do what it does. Keep going! 🔄"
+    "Don't watch the clock; do what it does. Keep going! 🔄",
+    "Productivity is never an accident. It's always the result of commitment to excellence! 🌟",
+    "The way to get started is to quit talking and begin doing! 🏃‍♂️",
+    "Focus on being productive instead of busy! 🎯",
+    "Your only limit is the focus you bring to your work! ⚡",
+    "Small daily improvements are the key to staggering long-term results! 📈"
   ];
   
   setInterval(() => {
-    if (currentUser) {
+    if (currentUser && Math.random() > 0.7) {
       const quote = quotes[Math.floor(Math.random() * quotes.length)];
       showNotification(quote);
     }
-  }, 300000);
+  }, 600000);
+  
+  // Close modals when clicking outside
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  });
+  
+  // Close modals with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.style.display = 'none';
+      });
+    }
+  });
 });
 </script>
 </body>
